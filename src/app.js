@@ -1,5 +1,10 @@
+const dotenv = require("dotenv")
 const express = require('express')
-const cors = require('cors')
+const cors = require('cors');
+const connectDB = require("./database/connect");
+
+dotenv.config();
+connectDB()
 
 const app = express()
 
@@ -13,6 +18,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use('/', require('./routes/route'))
+app.use('/', require('./routes/route')) 
+
 
 module.exports = app

@@ -5,6 +5,8 @@ const { getAllCategories } = require('../controllers/categories')
 router.get('/', async (req, res, next) => {
   const categories = await getAllCategories()
 
+  console.log(categories)
+
   return res.status(200).json({ msg: true, data: categories })
 })
 
