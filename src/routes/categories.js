@@ -5,7 +5,7 @@ const { findAllCategories, findById } = require('../controllers/categories')
 router.get('/', async (req, res, next) => {
   const categories = await findAllCategories()
 
-  if(categories.length < 1) {
+  if (categories.length < 1) {
     return res.status(404).json({ message: 'Não há categorias cadastradas' })
   }
 
@@ -16,8 +16,10 @@ router.get('/:id', async (req, res, next) => {
   const { id } = req.params
   const categories = await findById(id)
 
-  if(categories.length < 1) {
-    return res.status(404).json({ message: 'Não foi possivel encontrar a categoria selecionada' })
+  if (categories.length < 1) {
+    return res
+      .status(404)
+      .json({ message: 'Não foi possivel encontrar a categoria selecionada' })
   }
 
   return res.status(200).json({ message: 'success', body: categories })

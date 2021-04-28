@@ -5,7 +5,7 @@ const findAllCategories = async () => {
 }
 
 const findById = async (id) => {
-  params = `where id = ${id}`
+  const params = `where id = ${id}`
   return await db.findSpecificRow({ table: 'categories', params })
 }
 
