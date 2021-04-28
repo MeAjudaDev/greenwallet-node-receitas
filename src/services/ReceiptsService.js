@@ -1,7 +1,7 @@
 const db = require('../helpers/database')
 
 const create = async(data) =>{
-    
+    return await db.insertIntoTable("expenses", data)
 }
 
 const edit = async(data) =>{
