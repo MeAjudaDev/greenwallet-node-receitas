@@ -18,7 +18,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use('/', require('./routes/route')) 
+app.use('/categories', require('./routes/categories')) 
 
 
 module.exports = app

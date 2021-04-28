@@ -1,9 +1,15 @@
 const db = require('../helpers/database')
 
-const getAllCategories = async () => {
+const findAllCategories = async () => {
   return await db.selectAll({table: 'categories'})
 }
 
+const findById = async (id) => {
+  params = `where id = ${id}`
+  return await db.findSpecificRow({ table: 'categories', params })
+}
+
 module.exports = {
-  getAllCategories
+  findAllCategories,
+  findById
 }
