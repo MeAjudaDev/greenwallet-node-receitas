@@ -10,7 +10,7 @@ const createReceipt = async (req, res, next) => {
         const status = await ReceiptsService.create(req.body)
         return res.status(status).json({message: 'Request done'})
     }catch(e){
-
+        return res.status(400).json({message: e.message})
     }
 }
 
