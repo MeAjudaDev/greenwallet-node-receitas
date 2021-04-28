@@ -15,3 +15,10 @@ const list = async(data) =>{
 const del = async(data) =>{
 
 }
+
+module.exports = {
+    create,
+    edit,
+    list,
+    del
+}

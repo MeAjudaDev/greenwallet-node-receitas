@@ -1,4 +1,4 @@
-
+const ReceiptsService = require('../services/ReceiptsService')
 
 const createReceipt = async (req, res, next) => {
     try{
