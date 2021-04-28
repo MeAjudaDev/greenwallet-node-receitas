@@ -1,13 +1,7 @@
-const connectDB = require('../database/connect');
+const db = require('../helpers/database')
 
 const getAllCategories = async () => {
-  return await connectDB().promise().query("SELECT * from categories")
-    .then( ([rows,fields]) => {
-      console.log(rows);
-      return rows
-    })
-    .catch(console.log)
-    .then( () => connectDB().end());
+  return await db.selectAll({table: 'categories'})
 }
 
 module.exports = {
