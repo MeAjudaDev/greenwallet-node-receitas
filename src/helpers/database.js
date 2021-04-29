@@ -21,7 +21,15 @@ const insertIntoTable = async ( table, values ) =>{
     case "expenses":{
       query += `expenses(description, value, is_fixed, due_date, category_id, user_id) VALUES (?, ?, ?, ?, ?, ?)`
       vals = [values.description, values.value, values.is_fixed, values.due_date, values.category_id, values.user_id]
+      break;
     }
+
+    case "categories":{
+      query += `categories(name, state, type, user_id) VALUES (?, ?, ?, ?)`
+      vals = [values.name, values.state, values.type, values.user_id, values.user_id]
+      break;
+    }
+
   }
   const res = await conn.query(query, vals)
   if(res[0]){
@@ -31,8 +39,15 @@ const insertIntoTable = async ( table, values ) =>{
   }
 }
 
+const deleteItemTable = async ({ table, params }) => {
+  const conn = await connectDB()
+  const [rows] = await conn.query(`DELETE FROM ${table} ${params}`)
+  return rows
+}
+
 module.exports = {
   selectAll,
   findSpecificRow,
-  insertIntoTable
+  insertIntoTable,
+  deleteItemTable
 }
