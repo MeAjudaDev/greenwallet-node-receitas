@@ -8,16 +8,23 @@ const createCategoryServices = async (id, name, state, type) => {
     const searchCategory = await db.findSpecificRow({ table: "categories", params: `where user_id=${id} and name="${name}"`})
 
     if(searchCategory.length !== 0){
-        return { errAlreadyCreate: "category already create" }
+        return { errData: "category already create" }
+    }
+
+    if(state !== "A" && state !== "D" && state !== "E"){
+        return { errData : "Invalid params in state"}
+    }
+
+    if(type !== "E" && type !== "R"){
+        return { errData: "Invalid params in type" }
     }
 
     await db.insertIntoTable("categories", {
         user_id: id,
         name,
         state, 
-        type,
-        update_at: new Date()
-    }) 
+        type
+    })
 
     return { msg: "create" }
 }
@@ -33,7 +40,7 @@ const updateCategoryServices = async (idUser, idCategory, name, state, type) => 
         return { errData : "Invalid params in state"}
     }
 
-    if(type !== "R" && type !== "D"){
+    if(type !== "E" && type !== "R"){
         return { errData: "Invalid params in type" }
     }
     

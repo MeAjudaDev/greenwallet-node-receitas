@@ -21,8 +21,8 @@ const createCategory = async(req, res) => {
       return res.status(422).json({ message: create.err })
     }
 
-    if(create.errAlreadyCreate){
-      return res.status(400).json({ message: create.errAlreadyCreate })
+    if(create.errData){
+      return res.status(400).json({ message: create.errData })
     }
 
     return res.status(201).json({ message: "Request done" })
@@ -47,7 +47,7 @@ const updateCategory = async(req, res) => {
       return res.status(422).json({ message: update.errData })
     }
 
-    return res.status(200).json({ message: update.msg })
+    return res.status(200).json({ message: "Request done"})
 
   } catch (error) {
     console.log(error)
@@ -70,7 +70,7 @@ const deleteCategory = async(req, res) => {
       return res.status(404).json({ message: del.errNotFound })
     }
     
-    return res.status(200).json({ message: del.msg })
+    return res.status(200).json({ message: "Request done" })
   } catch (error) {
     return res.status(500).json({ err: error })
   }
