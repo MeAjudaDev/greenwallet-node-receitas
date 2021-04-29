@@ -1,5 +1,5 @@
 const db = require('../helpers/database')
-const { createCategoryServices, deleteCategoryServices } = require('../services/CategoriesServices')
+const { createCategoryServices, deleteCategoryServices, updateCategoryServices } = require('../services/CategoriesServices')
 
 const findAllCategories = async () => {
   return await db.selectAll({table: 'categories'})
@@ -32,6 +32,29 @@ const createCategory = async(req, res) => {
   }
 }
 
+const updateCategory = async(req, res) => {
+  try {
+    const { id } = req.params;
+    const { idCategory, name, state, type } = req.body;
+
+    const update = await updateCategoryServices(id, idCategory, name, state, type)
+
+    if(update.err){
+      return res.status(404).json({ message: update.err })
+    }
+
+    if(update.errData){
+      return res.status(422).json({ message: update.errData })
+    }
+
+    return res.status(200).json({ message: update.msg })
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ err: error })
+  }
+}
+
 const deleteCategory = async(req, res) => {  
   try {
     const { id } = req.params;
@@ -58,5 +81,6 @@ module.exports = {
   findAllCategories,
   findById,
   createCategory,
+  updateCategory,
   deleteCategory
 }

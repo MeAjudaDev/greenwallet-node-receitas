@@ -45,9 +45,16 @@ const deleteItemTable = async ({ table, params }) => {
   return rows
 }
 
+const updateItemTable = async ({ table, params }) => {
+  const conn = await connectDB()
+  const [rows] = await conn.query(`UPDATE ${table} SET ${params} `)
+  return rows
+}
+
 module.exports = {
   selectAll,
   findSpecificRow,
   insertIntoTable,
-  deleteItemTable
+  deleteItemTable,
+  updateItemTable
 }
