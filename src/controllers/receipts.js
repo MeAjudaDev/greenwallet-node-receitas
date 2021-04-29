@@ -16,7 +16,7 @@ const createReceipt = async (req, res, next) => {
 
 const editReceipt = async (req, res, next) => {
     try{
-
+        
     }catch(e){
         
     }
@@ -24,9 +24,16 @@ const editReceipt = async (req, res, next) => {
 
 const getReceipts = async (req, res, next) => {
     try{
+        if(req.params || !req.query){
+            const receipt = await ReceiptsService.list({data:req.params, single:true})
+            return res.status(200).json(receipt)
+        }else if(!req.params || req.query){
 
+        }else{
+            return res.status(400).json({message: 'Invalid request'})
+        }
     }catch(e){
-        
+        return res.status(400).json({message: e.message})
     }
 }
 

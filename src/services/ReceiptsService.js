@@ -8,8 +8,13 @@ const edit = async(data) =>{
 
 }
 
-const list = async(data) =>{
-
+const list = async({data, single}) =>{
+    if(single){
+        const params = `where id = ${data.id}`
+        return await db.findSpecificRow({ table: "expenses", params})
+    }else{
+        
+    }
 }
 
 const del = async(data) =>{
