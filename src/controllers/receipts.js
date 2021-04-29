@@ -32,9 +32,15 @@ const getReceipts = async (req, res, next) => {
 
 const deleteReceipt = async (req, res, next) => {
     try{
-
+        const id = req.params.id
+        if(!id) {
+            return res.status(422).json({message: 'Invalid params'})
+        }
+        const del = await ReceiptsService.del({id})
+        const status = del.affectedRows == 1 ? { code:200, message: 'Request done!' } : { code: 500, message: "Couldn't find any receipt with the given id"}
+        return res.status(status.code).json({ message: status.message })
     }catch(e){
-        
+        return res.json({message: e.message})
     }
 }
 
