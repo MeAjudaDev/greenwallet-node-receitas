@@ -15,10 +15,19 @@ const createReceipt = async (req, res, next) => {
 }
 
 const editReceipt = async (req, res, next) => {
-    try{
+    try {
+        //  todo validation on a different folder
+        if(!req.body.description || !req.body.value || !req.body.due_date ||! req.body.category_id || !req.body.user_id || !req.body.is_fixed){
+            return res.status(422).send({ message: 'Invalid params!' });
+        }
 
-    }catch(e){
-        
+        const update = await ReceiptsService.edit(req.body)
+        const status = update.affectedRows == 1 ? 200 : 500 
+        return res.status(status).json({ message: "Request done"})
+    
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ err: error })
     }
 }
 
