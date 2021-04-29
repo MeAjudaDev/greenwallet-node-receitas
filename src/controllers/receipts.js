@@ -22,8 +22,8 @@ const editReceipt = async (req, res, next) => {
         }
 
         const update = await ReceiptsService.edit(req.body)
-        const status = update.affectedRows == 1 ? 200 : 500 
-        return res.status(status).json({ message: "Request done"})
+        const status = update.affectedRows == 1 ? { code:200, message: 'Request done'} : { code: 500, message: "Couldn't edit any receipt with the given id" } 
+        return res.status(status.code).json({ message: status.message })
     
     } catch (error) {
         console.log(error)
