@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { findAllCategories, findById } = require('../controllers/categories')
+const { findAllCategories, findById, createCategory, deleteCategory, updateCategory } = require('../controllers/categories')
 
 router.get('/', async (req, res, next) => {
   const categories = await findAllCategories()
@@ -24,5 +24,11 @@ router.get('/:id', async (req, res, next) => {
 
   return res.status(200).json({ message: 'success', body: categories })
 })
+
+router.post("/:id", createCategory)
+
+router.put("/:id", updateCategory)
+
+router.delete("/:id", deleteCategory)
 
 module.exports = router

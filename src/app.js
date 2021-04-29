@@ -17,5 +17,6 @@ app.use(function (req, res, next) {
 })
 
 app.use('/categories', require('./routes/categories'))
+app.use('/receipts', require('./routes/receipts'))
 
 module.exports = app
