@@ -1,22 +1,17 @@
 const db = require("../helpers/database")
+const ValidationCategories = require("../helpers/validations/categoriesValidations")
 
 const createCategoryServices = async (id, name, state, type) => {
-    if(!name || !state || !type){
-        return { message: 'Invalid params!' };
-    }
 
     const searchCategory = await db.findSpecificRow({ table: "categories", params: `where user_id=${id} and name="${name}"`})
+    const validateCategory = ValidationCategories(name, state, type)
 
     if(searchCategory.length !== 0){
         return { message: "category already create" }
     }
 
-    if(state !== "A" && state !== "D" && state !== "E"){
-        return { message : "Invalid params in state"}
-    }
-
-    if(type !== "E" && type !== "R"){
-        return { message: "Invalid params in type" }
+    if(validateCategory.message){
+        return { message: validateCategory.message }
     }
 
     const product = {
