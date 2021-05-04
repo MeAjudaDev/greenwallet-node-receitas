@@ -1,5 +1,6 @@
 
 const ValidatorMiddleware = async (req, res, next) =>{
+    //  create config file with all the endpoints and its needed params?
     let errorJson = {
         message: 'Error on ',
         errors: {
@@ -16,7 +17,8 @@ const ValidatorMiddleware = async (req, res, next) =>{
                 "value",
                 "due_date",
                 "category_id",
-                "user_id"
+                "user_id",
+                "is_fixed"
             ]
             const checkParams = checkHasParams({neededParams, reqParams: req.body})
             if(checkParams.hasError){
@@ -26,7 +28,19 @@ const ValidatorMiddleware = async (req, res, next) =>{
             break
         }
         case "PUT":{
-            validateEditReceipt(errorJson, req.body)
+            const neededParams = [
+                "description",
+                "value",
+                "due_date",
+                "category_id",
+                "user_id",
+                "is_fixed"
+            ]
+            const checkParams = checkHasParams({neededParams, reqParams: req.body})
+            if(checkParams.hasError){
+                errorJson.errors.missingParams = checkParams.errors
+                errorJson.message += 'create receipt'
+            }
             break
         }
         case "DELETE":{
