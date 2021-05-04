@@ -1,5 +1,5 @@
 const db = require("../helpers/database")
-const ValidationCategories = require("../helpers/validations/categoriesValidations")
+const { ValidationCategories, ValidationNameAllowed } = require("../helpers/validations/categoriesValidations")
 
 const createCategoryServices = async (id, name, state, type) => {
 
@@ -33,17 +33,19 @@ const createCategoryServices = async (id, name, state, type) => {
 
 const updateCategoryServices = async (idUser, idCategory, name, state, type) => {
     const searchCategory = await db.findSpecificRow({ table: "categories", params: `where user_id=${idUser} and id="${idCategory}"`})
+    const validateCategory = ValidationCategories(name, state, type)
+    const verifyNameallowed = await ValidationNameAllowed(idUser, idCategory, name)
 
     if(searchCategory.length === 0){
         return { message: "category not found" }
     }
 
-    if(state !== "A" && state !== "D" && state !== "E"){
-        return { message : "Invalid params in state"}
+    if(validateCategory.message){
+        return { message: validateCategory.message }
     }
-
-    if(type !== "E" && type !== "R"){
-        return { message: "Invalid params in type" }
+    
+    if(verifyNameallowed.message){
+        return { message: verifyNameallowed.message }
     }
     
     await db.updateItemTable({ table: "categories", params: `name="${name}", state="${state}", type="${type}" WHERE user_id=${idUser} and id=${idCategory}` })
@@ -66,7 +68,6 @@ const deleteCategoryServices = async (idUser, idCategory) => {
 
     return { message: "" }
 }
-
 
 module.exports = {
     createCategoryServices,

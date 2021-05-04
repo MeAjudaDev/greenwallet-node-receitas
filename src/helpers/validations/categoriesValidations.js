@@ -1,3 +1,4 @@
+const db = require("../database")
 
 function ValidationCategories(name, state, type){
 
@@ -19,4 +20,25 @@ function ValidationCategories(name, state, type){
     return { message: "" }
 }
 
-module.exports = ValidationCategories
+async function ValidationNameAllowed (idUser, idCategory, name){
+    const verifyNameallowed = await db.findSpecificRow({ table: "categories", params: `where user_id=${idUser} and id !=${idCategory}` })
+
+    const verifyName = verifyNameallowed.filter(result => {
+        if(result.name === name){
+            return result
+        }
+
+        return 0
+    }) 
+
+    if(verifyName.length !== 0){
+        return { message: "name already used" }
+    }
+
+    return { message: "" }
+}
+
+module.exports = {
+    ValidationNameAllowed,
+    ValidationCategories
+}
