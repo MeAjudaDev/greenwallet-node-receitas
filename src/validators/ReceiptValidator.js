@@ -1,47 +1,90 @@
 
 const ValidatorMiddleware = async (req, res, next) =>{
-    let errors = []
-    let errMessage = ''
-    switch (req.method){
-        case "GET":{
-            message += 'list'
-        }
-        case "POST":{
-            message += 'add'
-        }
-        case "PUT":{
-            message += 'edit'
-        }
-        case "DELETE":{
-            message += 'delete'
+    let errorJson = {
+        message: 'Error on ',
+        errors: {
+            missingParams:[]
         }
     }
-    if(erros){
-        return
+    switch (req.method){
+        case "GET":{
+            break
+        }
+        case "POST":{
+            const neededParams = [
+                "description",
+                "value",
+                "due_date",
+                "category_id",
+                "user_id"
+            ]
+            const checkParams = checkHasParams({neededParams, reqParams: req.body})
+            if(checkParams.hasError){
+                errorJson.errors.missingParams = checkParams.errors
+                errorJson.message += 'create receipt'
+            }
+            break
+        }
+        case "PUT":{
+            validateEditReceipt(errorJson, req.body)
+            break
+        }
+        case "DELETE":{
+            validateDeleteReceipt(errorJson, req.body)
+            break
+        }
+    }
+    if(errorJson.errors.missingParams.length >= 1){
+        return res.status(422).json(errorJson)
     }
     next()
 }
 
-const validateCreateReceipt = () =>{
-
+const validateEditReceipt = (errJson, reqParams) =>{
+    const checkParams = checkHasParams({neededParams, reqParams})
+    if(checkParams.hasError){
+        errJson.errors = checkParams.errors
+        errJson.message += 'edit'
+    }
 }
 
-const validateEditReceipt = () =>{
-    
+const validateGetSingleReceipt = (errJson, reqParams) =>{
+    const checkParams = checkHasParams({neededParams, reqParams})
+    if(checkParams.hasError){
+        errJson.errors = checkParams.errors
+        errJson.message += 'list'
+    }
 }
 
-const validateGetSingleReceipt = () =>{
-
+const validateGetMultipleReceipts = (errJson, reqParams) =>{
+    const checkParams = checkHasParams({neededParams, reqParams})
+    if(checkParams.hasError){
+        errJson.errors = checkParams.errors
+        errJson.message += 'list'
+    }
 }
 
-const validateGetMultipleReceipts = () =>{
-
+const validateDeleteReceipt = (errJson, reqParams) =>{
+    const checkParams = checkHasParams({neededParams, reqParams})
+    if(checkParams.hasError){
+        errJson.errors = checkParams.errors
+        errJson.message += 'delete'
+    }
 }
 
-const validateDeleteReceipt = () =>{
-
+const checkHasParams = ({neededParams, reqParams}) =>{
+    let res = {
+        errors: [],
+        hasError: false
+    }
+    for(p of neededParams){
+        if(typeof reqParams[p] == 'undefined' || reqParams[p] == null){
+            res.errors.push(p)
+            res.hasError = true
+        }
+    }
+    return res
 }
-
 
 module.exports = {
     ValidatorMiddleware
