@@ -9,6 +9,23 @@ const ValidatorMiddleware = async (req, res, next) =>{
     }
     switch (req.method){
         case "GET":{
+            const isSingle = req.url.includes('/list/single/')
+            if(isSingle){
+                const param = req.url.split('/list/single/')[1]
+                if(!param){
+                    errorJson.errors.missingParams.push('id')
+                    errorJson.message += 'list receipt'
+                }
+            }else{
+                const neededParams = [
+                    "user_id"
+                ]
+                const checkParams = checkHasParams({neededParams, reqParams: req.query})
+                if(checkParams.hasError){
+                    errorJson.errors.missingParams = checkParams.errors
+                    errorJson.message += 'list multiple receipts'
+                }
+            }
             break
         }
         case "POST":{
