@@ -12,67 +12,57 @@ const findById = async (id) => {
 
 const createCategory = async(req, res) => {
   try {
-    const { id } = req.params;
+    const { idUser } = req.params;
     const { name, state, type } = req.body;
 
-    const create = await createCategoryServices(id, name, state, type)
+    const create = await createCategoryServices(idUser, name, state, type)
 
-    if(create.err){
-      return res.status(422).json({ message: create.err })
+    if(create.message !== "Sucesso"){
+      return res.status(400).json({ message: create.message })
     }
 
-    if(create.errData){
-      return res.status(400).json({ message: create.errData })
-    }
-
-    return res.status(201).json({ message: "Request done" })
+    return res.status(201).json(create)
 
   } catch (error) {
-    return res.status(500).json({ err: error })
+    return res.status(500).json({ message: error })
   }
 }
 
 const updateCategory = async(req, res) => {
   try {
-    const { id } = req.params;
-    const { idCategory, name, state, type } = req.body;
+    const { idUser, idCategory } = req.params;
+    const { name, state, type } = req.body;
 
-    const update = await updateCategoryServices(id, idCategory, name, state, type)
+    const update = await updateCategoryServices(idUser, idCategory, name, state, type)
 
-    if(update.err){
-      return res.status(404).json({ message: update.err })
+    if(update.message === "category not found"){
+      return res.status(404).json({ message: update.message })
     }
 
-    if(update.errData){
-      return res.status(422).json({ message: update.errData })
+    if(update.message){
+      return res.status(422).json({ message: update.message })
     }
 
-    return res.status(200).json({ message: "Request done"})
+    return res.status(200).json({ message: "Sucesso"})
 
   } catch (error) {
     console.log(error)
-    return res.status(500).json({ err: error })
+    return res.status(500).json({ message: error })
   }
 }
 
 const deleteCategory = async(req, res) => {  
   try {
-    const { id } = req.params;
-    const { category } = req.body;
-  
-    const del = await deleteCategoryServices(category, id)
+    const { idUser, idCategory } = req.params;
+    const del = await deleteCategoryServices(idUser, idCategory)
 
-    if(del.err){
-      return res.status(422).json({ message: del.err })
-    }
-
-    if(del.errNotFound){
-      return res.status(404).json({ message: del.errNotFound })
+    if(del.message){
+      return res.status(404).json({ message: del.message })
     }
     
-    return res.status(200).json({ message: "Request done" })
+    return res.status(200).json({ message: "Deletado com sucesso" })
   } catch (error) {
-    return res.status(500).json({ err: error })
+    return res.status(500).json({ message: error })
   }
 }
 

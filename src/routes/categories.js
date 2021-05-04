@@ -25,10 +25,10 @@ router.get('/:id', async (req, res, next) => {
   return res.status(200).json({ message: 'success', body: categories })
 })
 
-router.post("/:id", createCategory)
+router.post("/:idUser", createCategory)
 
-router.put("/:id", updateCategory)
+router.put("/:idUser/:idCategory", updateCategory)
 
-router.delete("/:id", deleteCategory)
+router.delete("/:idUser/:idCategory", deleteCategory)
 
 module.exports = router
