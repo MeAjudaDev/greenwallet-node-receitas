@@ -44,17 +44,19 @@ const ValidatorMiddleware = async (req, res, next) =>{
             break
         }
         case "DELETE":{
-            console.log(req.params)
-            //validateDeleteReceipt(errorJson, req.body)
+            const param = req.url.split('/delete/')[1]
+            if(!param){
+                errorJson.errors.missingParams.push('id')
+                errorJson.message += 'deleting receipt'
+            }
             break
         }
     }
     if(errorJson.errors.missingParams.length >= 1){
         return res.status(422).json(errorJson)
     }
-    
-    return res.status(200)
-    //next()
+
+    next()
 }
 
 const checkHasParams = ({neededParams, reqParams}) =>{
