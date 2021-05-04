@@ -54,10 +54,7 @@ const updateCategoryServices = async (idUser, idCategory, name, state, type) => 
 }
 
 const deleteCategoryServices = async (idUser, idCategory) => {
-    if(!idCategory || !idUser){
-        return { message: "Invalid params!" }
-    }
-
+    
     const searchData = await db.findSpecificRow({ table: "categories", params: `where user_id=${idUser} and id="${idCategory}"`})
 
     if(searchData.length === 0){
