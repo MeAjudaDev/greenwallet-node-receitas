@@ -44,46 +44,17 @@ const ValidatorMiddleware = async (req, res, next) =>{
             break
         }
         case "DELETE":{
-            validateDeleteReceipt(errorJson, req.body)
+            console.log(req.params)
+            //validateDeleteReceipt(errorJson, req.body)
             break
         }
     }
     if(errorJson.errors.missingParams.length >= 1){
         return res.status(422).json(errorJson)
     }
-    next()
-}
-
-const validateEditReceipt = (errJson, reqParams) =>{
-    const checkParams = checkHasParams({neededParams, reqParams})
-    if(checkParams.hasError){
-        errJson.errors = checkParams.errors
-        errJson.message += 'edit'
-    }
-}
-
-const validateGetSingleReceipt = (errJson, reqParams) =>{
-    const checkParams = checkHasParams({neededParams, reqParams})
-    if(checkParams.hasError){
-        errJson.errors = checkParams.errors
-        errJson.message += 'list'
-    }
-}
-
-const validateGetMultipleReceipts = (errJson, reqParams) =>{
-    const checkParams = checkHasParams({neededParams, reqParams})
-    if(checkParams.hasError){
-        errJson.errors = checkParams.errors
-        errJson.message += 'list'
-    }
-}
-
-const validateDeleteReceipt = (errJson, reqParams) =>{
-    const checkParams = checkHasParams({neededParams, reqParams})
-    if(checkParams.hasError){
-        errJson.errors = checkParams.errors
-        errJson.message += 'delete'
-    }
+    
+    return res.status(200)
+    //next()
 }
 
 const checkHasParams = ({neededParams, reqParams}) =>{
