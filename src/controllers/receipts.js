@@ -45,7 +45,7 @@ const getMultipleReceipts = async (req, res) => {
 
 const deleteReceipt = async (req, res) => {
     try{
-        const del = await ReceiptsService.del({id})
+        const del = await ReceiptsService.del({id:req.params.id})
         const status = del.affectedRows == 1 ? { code:200, message: 'Delete with success' } : { code: 500, message: "Couldn't find any receipt with the given id"}
         return res.status(status.code).json({ message: status.message })
     }catch(e){
