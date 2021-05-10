@@ -1,4 +1,4 @@
-const db = require("../database")
+const db = require("../helpers/database")
 
 function ValidationCategories(name, state, type){
 

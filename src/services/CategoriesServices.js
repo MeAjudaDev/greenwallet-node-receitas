@@ -1,5 +1,5 @@
 const db = require("../helpers/database")
-const { ValidationCategories, ValidationNameAllowed } = require("../helpers/validations/categoriesValidations")
+const { ValidationCategories, ValidationNameAllowed } = require("../validators/categoriesValidations")
 
 const createCategoryServices = async (id, name, state, type) => {
 
