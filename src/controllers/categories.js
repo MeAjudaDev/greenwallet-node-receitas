@@ -44,7 +44,7 @@ const updateCategory = async(req, res) => {
     }
 
     if(update.message){
-      return res.status(422).json({ message: update.message })
+      return res.status(422).json( update.message )
     }
 
     return res.status(200).json({ message: "Sucesso"})

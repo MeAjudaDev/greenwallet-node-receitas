@@ -10,7 +10,7 @@ const createCategoryServices = async (id, name, state, type) => {
         return { message: "category already create" }
     }
 
-    if(validateCategory){
+    if(validateCategory.length !== 0){
         return {
              message: { 
                  message: `Have ${validateCategory.length} erros`, 
@@ -45,12 +45,21 @@ const updateCategoryServices = async (idUser, idCategory, name, state, type) => 
         return { message: "category not found" }
     }
 
-    if(validateCategory.message){
-        return { message: validateCategory.message }
+    if(validateCategory.length !== 0){
+        return {
+             message: { 
+                 message: `Have ${validateCategory.length} erros`, 
+                 erros: validateCategory
+                }
+        }
     }
     
     if(verifyNameallowed.message){
-        return { message: verifyNameallowed.message }
+        return {
+            message: {
+                message: verifyNameallowed.message
+            }
+        }
     }
     
     await db.updateItemTable({ table: "categories", params: `name="${name}", state="${state}", type="${type}" WHERE user_id=${idUser} and id=${idCategory}` })
