@@ -10,8 +10,13 @@ const createCategoryServices = async (id, name, state, type) => {
         return { message: "category already create" }
     }
 
-    if(validateCategory.message){
-        return { message: validateCategory.message }
+    if(validateCategory){
+        return {
+             message: { 
+                 message: `Have ${validateCategory.length} erros`, 
+                 erros: validateCategory
+                }
+        }
     }
 
     const product = {
@@ -26,7 +31,7 @@ const createCategoryServices = async (id, name, state, type) => {
         name: product.name,
         state: product.state, 
         type: product.type
-    })
+    }) 
 
     return { body: [product], message: "Sucesso" }
 }
