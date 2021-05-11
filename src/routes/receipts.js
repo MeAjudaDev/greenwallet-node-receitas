@@ -12,7 +12,3 @@ router.delete('/delete/:id',  ReceiptsController.deleteReceipt)
 
 
 module.exports = router
-
-
-
-// a
