@@ -5,19 +5,30 @@ function ValidationCategories(name, state, type){
     const stateAllowed = ["A", "D", "E"]
     const typesAllowed = ["E", "R"]
 
+    const erros = []
+
     if(name.length > 100){
-        return { message: "allowed limit up to 100 characters in name" }
+        erros.push({
+            path: "name",
+            message: "allowed limit up to 100 characters in name"
+        })
     }
 
     if(!stateAllowed.includes(state)){
-        return { message: "Invalid params in state" }
+        erros.push({
+            path: "state", 
+            message: "Invalid params in state" 
+        })
     }
 
     if(!typesAllowed.includes(type)){
-        return { message: "Invalid params in type" }
+        erros.push({ 
+            path: "type",
+            message: "Invalid params in type" 
+        })
     }
 
-    return { message: "" }
+    return erros
 }
 
 async function ValidationNameAllowed (idUser, idCategory, name){

@@ -17,8 +17,12 @@ const createCategory = async(req, res) => {
 
     const create = await createCategoryServices(idUser, name, state, type)
 
-    if(create.message !== "Sucesso"){
+    if(create.message === "category already create"){
       return res.status(400).json({ message: create.message })
+    }
+
+    if(create.message !== "Sucesso"){
+      return res.status(422).json(create.message)
     }
 
     return res.status(201).json(create)
@@ -40,7 +44,7 @@ const updateCategory = async(req, res) => {
     }
 
     if(update.message){
-      return res.status(422).json({ message: update.message })
+      return res.status(422).json( update.message )
     }
 
     return res.status(200).json({ message: "Sucesso"})
