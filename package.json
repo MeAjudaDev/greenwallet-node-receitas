@@ -1,39 +1,36 @@
 {
-  "name": "receitas-back-node",
+  "name": "receitas-back-node-ts",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "tsnd --transpile-only --respawn bin/server",
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/meajuda-dev/Receitas-Back-Node.git"
-  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/meajuda-dev/Receitas-Back-Node/issues"
-  },
-  "homepage": "https://github.com/meajuda-dev/Receitas-Back-Node#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^9.0.2",
     "express": "^4.17.1",
-    "git-commit-msg-linter": "^3.1.0",
-    "mysql2": "^2.2.5",
-    "sequelize": "^6.6.2"
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.32"
   },
   "devDependencies": {
-    "eslint": "^7.25.0",
-    "eslint-config-prettier": "^8.3.0",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.11",
+    "@types/node": "^15.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
+    "eslint": "^7.26.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "nodemon": "^2.0.7",
-    "prettier": "^2.2.1"
+    "eslint-plugin-promise": "^4.3.1",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.2.4"
   }
 }
