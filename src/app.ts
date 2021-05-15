@@ -14,7 +14,7 @@ app.use(cors())
 
 app.use(express.json())
 
-app.use(transactionsRoutes)
-app.use(categoriesRoutes)
+app.use('/transactions', transactionsRoutes)
+app.use('/categories', categoriesRoutes)
 
 export default app
