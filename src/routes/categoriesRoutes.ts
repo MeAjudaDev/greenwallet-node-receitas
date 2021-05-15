@@ -1,12 +1,11 @@
 import { Router } from 'express'
 import CategoriesController from '../controllers/CategoriesController'
 
-const transactionsRoutes = Router()
+const categoriesRoutes = Router()
 
-transactionsRoutes.get('/', CategoriesController.index)
-transactionsRoutes.get('/:id', CategoriesController.index)
-transactionsRoutes.post('/:idUser', CategoriesController.create)
-transactionsRoutes.put('/:idUser/:idCategory', CategoriesController.update)
-transactionsRoutes.delete('/:idUser/:idCategory', CategoriesController.delete)
+categoriesRoutes.get('/:id?', CategoriesController.index)
+categoriesRoutes.post('/', CategoriesController.create)
+categoriesRoutes.put('/:idUser/:idCategory', CategoriesController.update)
+categoriesRoutes.delete('/:idUser/:idCategory', CategoriesController.delete)
 
-export default transactionsRoutes
+export default categoriesRoutes
