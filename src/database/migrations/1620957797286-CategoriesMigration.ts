@@ -7,8 +7,10 @@ export class CategoriesMigration1620957797286 implements MigrationInterface {
       columns: [
         {
           name: 'id',
-          type: 'varchar',
-          isPrimary: true
+          type: 'int',
+          isPrimary: true,
+          isGenerated: true,
+          generationStrategy: 'increment'
         },
         {
           name: 'user_id',
