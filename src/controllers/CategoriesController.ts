@@ -53,9 +53,21 @@ export default new class CategoryController {
 
   async update (req: Request, res: Response) {
     try {
-      const data = {}
-
-      return res.status(200).json(data)
+      if (!req.params.idUser || !req.params.idCategory) {
+        return res.status(422).json({ message: 'Invalid params' })
+      }
+      const categoriesRepository = getCustomRepository(CategoriesRepository)
+      const categoryUpdated: any = await categoriesRepository.updateCategory({
+        idUser: req.params.idUser,
+        idCategory: req.params.idCategory,
+        name: req.body.name,
+        state: req.body.state,
+        type: req.body.type
+      })
+      if (categoryUpdated.raw.affectedRows < 1) {
+        return res.status(404).json({ message: 'Não foi possível editar a categoria' })
+      }
+      return res.status(200).json({ message: 'Sucesso' })
     } catch (error) {
       console.log(error)
       return res.status(500).json({ message: error })

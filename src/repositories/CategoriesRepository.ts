@@ -19,7 +19,7 @@ export default class CategoriesRepository extends Repository<CategoriesModel> {
     return await this.delete({ id: idCategory })
   }
 
-  async updateCategory (body: any) {
-    return ''
+  async updateCategory ({ idUser, idCategory, name, state, type }: any) {
+    return await this.update({ id: idCategory }, { user_id: idUser, name, state, type })
   }
 }
