@@ -64,9 +64,15 @@ export default new class CategoryController {
 
   async delete (req: Request, res: Response) {
     try {
-      const data = {}
-
-      return res.status(200).json(data)
+      if (!req.params.idUser || !req.params.idCategory) {
+        return res.status(422).json({ message: 'Invalid params' })
+      }
+      const categoriesRepository = getCustomRepository(CategoriesRepository)
+      const categoryDeleted = await categoriesRepository.deleteCategory(req.params.idCategory)
+      if (categoryDeleted.raw.affectedRows < 1) {
+        return res.status(404).json({ message: 'Não foi possível deletar a categoria' })
+      }
+      return res.status(200).json({ message: 'Sucesso' })
     } catch (error) {
       console.log(error)
       return res.status(500).json({ message: error })
