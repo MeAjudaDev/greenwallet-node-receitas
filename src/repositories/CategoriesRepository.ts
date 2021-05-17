@@ -7,7 +7,7 @@ export default class CategoriesRepository extends Repository<CategoriesModel> {
     return await this.find()
   }
 
-  async findSingle (id: string) {
+  async findById (id: string) {
     return await this.findOne(id)
   }
 

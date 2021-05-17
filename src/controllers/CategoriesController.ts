@@ -23,7 +23,7 @@ export default new class CategoryController {
           responseBody.body = category
         }
       } else {
-        const categories = await categoriesRepository.findSingle(req.params.id)
+        const categories = await categoriesRepository.findById(req.params.id)
         if (!categories) {
           responseBody.message += 'Não foi possível encontrar a categoria selecionada'
           statusCode = 404
