@@ -7,8 +7,10 @@ export class TransactionsMigration1620776843798 implements MigrationInterface {
       columns: [
         {
           name: 'id',
-          type: 'varchar',
-          isPrimary: true
+          type: 'int',
+          isPrimary: true,
+          isGenerated: true,
+          generationStrategy: 'increment'
         },
         {
           name: 'user_id',
