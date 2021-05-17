@@ -13,29 +13,42 @@ export default new class CategoryController {
       }
       let statusCode = 200
 
-      if (!req.params.id) {
-        const category = await categoriesRepository.findAll()
-        if (!category) {
-          responseBody.message = 'Não há categorias cadastradas'
-          statusCode = 404
-        } else {
-          responseBody.message = 'Sucesso'
-          responseBody.body = category
-        }
+      const category = await categoriesRepository.findAll()
+      if (!category) {
+        responseBody.message = 'Não há categorias cadastradas'
+        statusCode = 404
       } else {
-        const categories = await categoriesRepository.findById(req.params.id)
-        if (!categories) {
-          responseBody.message += 'Não foi possível encontrar a categoria selecionada'
-          statusCode = 404
-        } else {
-          responseBody.message = 'Sucesso'
-          responseBody.body?.push(categories)
-        }
+        responseBody.message = 'Sucesso'
+        responseBody.body = category
       }
+
       return res.status(statusCode).json(responseBody)
     } catch (error) {
       console.log(error)
       return res.status(500).json({ message: error })
+    }
+  }
+
+  async show (req: Request, res: Response) {
+    try {
+      const responseBody: CategoryGETResponse = {
+        message: '',
+        body: []
+      }
+      let statusCode = 200
+
+      const categoriesRepository = getCustomRepository(CategoriesRepository)
+      const categories = await categoriesRepository.findById(req.params.id)
+      if (!categories) {
+        responseBody.message += 'Não foi possível encontrar a categoria selecionada'
+        statusCode = 404
+      } else {
+        responseBody.message = 'Sucesso'
+        responseBody.body?.push(categories)
+      }
+      return res.status(statusCode).json(responseBody)
+    } catch (error) {
+      return res.status(500).json({ message: error.message })
     }
   }
 
@@ -47,7 +60,7 @@ export default new class CategoryController {
       return res.status(200).json(categoryCreated)
     } catch (error) {
       console.log(error)
-      return res.status(500).json({ message: error })
+      return res.status(500).json({ message: error.message })
     }
   }
 
@@ -70,7 +83,7 @@ export default new class CategoryController {
       return res.status(200).json({ message: 'Sucesso' })
     } catch (error) {
       console.log(error)
-      return res.status(500).json({ message: error })
+      return res.status(500).json({ message: error.message })
     }
   }
 
@@ -87,7 +100,7 @@ export default new class CategoryController {
       return res.status(200).json({ message: 'Sucesso' })
     } catch (error) {
       console.log(error)
-      return res.status(500).json({ message: error })
+      return res.status(500).json({ message: error.message })
     }
   }
 }()

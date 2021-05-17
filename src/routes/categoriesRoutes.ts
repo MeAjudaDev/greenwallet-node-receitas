@@ -3,7 +3,8 @@ import CategoriesController from '../controllers/CategoriesController'
 
 const categoriesRoutes = Router()
 
-categoriesRoutes.get('/:id?', CategoriesController.index)
+categoriesRoutes.get('/', CategoriesController.index)
+categoriesRoutes.get('/:idCategory', CategoriesController.show)
 categoriesRoutes.post('/', CategoriesController.create)
 categoriesRoutes.put('/:idUser/:idCategory', CategoriesController.update)
 categoriesRoutes.delete('/:idUser/:idCategory', CategoriesController.delete)
