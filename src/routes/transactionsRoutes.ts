@@ -3,7 +3,7 @@ import TransactionsControllers from '../controllers/TransactionsControllers'
 
 const transactionsRoutes = Router()
 
-transactionsRoutes.get('/', TransactionsControllers.index)
+transactionsRoutes.get('/:userId', TransactionsControllers.index)
 
 transactionsRoutes.get('/:userId/:transactionId', TransactionsControllers.show)
 

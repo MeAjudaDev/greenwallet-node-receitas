@@ -1,4 +1,4 @@
-import moment from 'moment'
+import { parse, format } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import TransactionsRepository from '../repositories/TransactionsRepository'
@@ -6,7 +6,12 @@ import TransactionsRepository from '../repositories/TransactionsRepository'
 export default new class TransactionsController {
   async index (req: Request, resp: Response) {
     try {
-      const data = await getCustomRepository(TransactionsRepository).find()
+      const { userId } = req.params
+      const data = await getCustomRepository(TransactionsRepository).find({
+        where: {
+          user_id: userId
+        }
+      })
 
       return resp.status(200).json(data)
     } catch (error) {
@@ -60,7 +65,7 @@ export default new class TransactionsController {
         category_id: transactionId,
         description: description,
         value: value,
-        due_Date: moment(dueDate, 'DD/MM/YYYY').format('YYYY/MM/DD'),
+        due_Date: format(parse(dueDate, 'dd/MM/yyyy', new Date()), 'yyyy/MM/dd'),
         isFixed: isFixed,
         state: state,
         type: type
