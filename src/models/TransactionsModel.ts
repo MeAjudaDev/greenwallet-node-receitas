@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity('transactions')
 export default class Transactions {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: string
 
     @Column()
