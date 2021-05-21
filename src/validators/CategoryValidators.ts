@@ -1,13 +1,20 @@
-import { body, param, validationResult } from 'express-validator'
+import { body, param, header, validationResult } from 'express-validator'
 import { RequestHandler } from 'express'
 const statesAllowed = ['A', 'D', 'E']
 const typesAllowed = ['E', 'R']
+
+export const indexRules = () => {
+  return [
+    header('userid').exists().isNumeric()
+  ]
+}
 
 export const showRules = () => {
   return [
     param('idCategory').exists().isNumeric()
   ]
 }
+
 export const createRules = () => {
   return [
     body('user_id').exists().isNumeric(),
@@ -16,6 +23,7 @@ export const createRules = () => {
     body('state').exists().isIn(statesAllowed)
   ]
 }
+
 export const updateRules = () => {
   return [
     param('idUser').exists().isNumeric(),
@@ -25,6 +33,7 @@ export const updateRules = () => {
     body('state').exists().isIn(statesAllowed)
   ]
 }
+
 export const deleteRules = () => {
   return [
     param('idUser').exists().isNumeric(),
@@ -38,7 +47,7 @@ export const validate: RequestHandler = (req, res, next) => {
     return next()
   }
   const extractedErrors: any = []
-  errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
+  errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }))
 
   return res.status(422).json({
     errors: extractedErrors
