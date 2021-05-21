@@ -6,6 +6,7 @@ import { CategoryGETResponse } from '../types/Category'
 export default new class CategoryController {
   async index (req: Request, res: Response) {
     try {
+      const userid = req.headers.userid
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const responseBody: CategoryGETResponse = {
         message: '',
@@ -13,11 +14,12 @@ export default new class CategoryController {
       }
       let statusCode = 200
 
-      const category = await categoriesRepository.findAll()
-      if (!category) {
-        responseBody.message = 'Não há categorias cadastradas'
+      const category = await categoriesRepository.findAll({ userid })
+      if (category.length < 1) {
+        responseBody.message = 'O usuário não possui categorias cadastradas'
         statusCode = 404
       } else {
+        console.log(category)
         responseBody.message = 'Sucesso'
         responseBody.body = category
       }

@@ -3,8 +3,8 @@ import CategoriesModel from '../models/CategoriesModel'
 
 @EntityRepository(CategoriesModel)
 export default class CategoriesRepository extends Repository<CategoriesModel> {
-  async findAll () {
-    return await this.find()
+  async findAll ({ userid }: any) {
+    return await this.find({ user_id: userid })
   }
 
   async findById (id: string) {
