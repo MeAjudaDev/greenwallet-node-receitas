@@ -15,7 +15,7 @@ export default new class TransactionsController {
 
       return resp.status(200).json(data)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return resp.status(500).json({ message: error })
     }
   }
@@ -32,7 +32,7 @@ export default new class TransactionsController {
 
       return resp.status(200).json({ message: 'success', body: [searchTransaction] })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return resp.status(500).json({ message: error })
     }
   }
@@ -44,7 +44,7 @@ export default new class TransactionsController {
 
       return resp.status(201).json({ message: 'success', body: [transaction] })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return resp.status(500).json({ message: error })
     }
   }
@@ -83,7 +83,7 @@ export default new class TransactionsController {
 
       return resp.status(200).json({ message: 'success', body: [data] })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return resp.status(500).json({ message: error })
     }
   }
@@ -102,7 +102,7 @@ export default new class TransactionsController {
 
       return resp.status(200).json({ message: 'success' })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return resp.status(500).json({ message: error })
     }
   }
