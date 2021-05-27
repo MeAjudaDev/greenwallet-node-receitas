@@ -6,7 +6,7 @@ import { CategoryGETResponse } from '../types/Category'
 export default new class CategoryController {
   async index (req: Request, res: Response) {
     try {
-      const userid = req.headers.userid
+      const { userid } = req.params
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const responseBody: CategoryGETResponse = {
         message: '',
@@ -15,24 +15,22 @@ export default new class CategoryController {
       let statusCode = 200
 
       const category = await categoriesRepository.findAll({ userid })
-      if (category.length < 1) {
-        responseBody.message = 'O usuário não possui categorias cadastradas'
-        statusCode = 404
-      } else {
-        console.log(category)
+      responseBody.message = 'O usuário não possui categorias cadastradas'
+      statusCode = 404
+      if (category.length) {
         responseBody.message = 'Sucesso'
         responseBody.body = category
       }
-
       return res.status(statusCode).json(responseBody)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return res.status(500).json({ message: error })
     }
   }
 
   async show (req: Request, res: Response) {
     try {
+      const { userid, idCategory } = req.params
       const responseBody: CategoryGETResponse = {
         message: '',
         body: []
@@ -40,16 +38,18 @@ export default new class CategoryController {
       let statusCode = 200
 
       const categoriesRepository = getCustomRepository(CategoriesRepository)
-      const categories = await categoriesRepository.findById(req.params.id)
-      if (!categories) {
-        responseBody.message += 'Não foi possível encontrar a categoria selecionada'
-        statusCode = 404
-      } else {
+      const category = await categoriesRepository.findByIdAndUserId({ userid, idCategory })
+
+      responseBody.message += 'Não foi possível encontrar a categoria selecionada'
+      statusCode = 404
+      if (category) {
         responseBody.message = 'Sucesso'
-        responseBody.body?.push(categories)
+        responseBody.body?.push(category)
       }
+
       return res.status(statusCode).json(responseBody)
     } catch (error) {
+      console.error(error)
       return res.status(500).json({ message: error.message })
     }
   }
@@ -61,7 +61,7 @@ export default new class CategoryController {
 
       return res.status(200).json(categoryCreated)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return res.status(500).json({ message: error.message })
     }
   }
@@ -71,6 +71,7 @@ export default new class CategoryController {
       if (!req.params.idUser || !req.params.idCategory) {
         return res.status(422).json({ message: 'Invalid params' })
       }
+
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const categoryUpdated: any = await categoriesRepository.updateCategory({
         idUser: req.params.idUser,
@@ -79,12 +80,13 @@ export default new class CategoryController {
         state: req.body.state,
         type: req.body.type
       })
+
       if (categoryUpdated.raw.affectedRows < 1) {
         return res.status(404).json({ message: 'Não foi possível editar a categoria' })
       }
       return res.status(200).json({ message: 'Sucesso' })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return res.status(500).json({ message: error.message })
     }
   }
@@ -101,7 +103,7 @@ export default new class CategoryController {
       }
       return res.status(200).json({ message: 'Sucesso' })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return res.status(500).json({ message: error.message })
     }
   }
