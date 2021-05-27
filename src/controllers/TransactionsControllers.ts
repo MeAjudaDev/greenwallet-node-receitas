@@ -9,9 +9,7 @@ export default new class TransactionsController {
     try {
       const { user_id } = req.params
       const data = await getCustomRepository(TransactionsRepository).find({
-        where: {
-          user_id: user_id
-        }
+        where: user_id
       })
 
       return resp.status(200).json(data)
@@ -25,7 +23,7 @@ export default new class TransactionsController {
     try {
       const { user_id, transaction_id } = req.params
       const transactionsRepository = getCustomRepository(TransactionsRepository)
-      const searchTransaction = await transactionsRepository.findOne({ user_id: user_id, id: transaction_id })
+      const searchTransaction = await transactionsRepository.findOne({ user_id, id: transaction_id })
 
       if (!searchTransaction) {
         return resp.status(404).json({ message: 'transaction not found' })
@@ -55,7 +53,7 @@ export default new class TransactionsController {
       const { user_id, transaction_id } = req.params
       const { description, value, state, type, due_date: dueDate, is_fixed: isFixed } = req.body
       const transactionsRepository = getCustomRepository(TransactionsRepository)
-      const searchTransaction = await transactionsRepository.findOne({ user_id: user_id, id: transaction_id })
+      const searchTransaction = await transactionsRepository.findOne({ user_id, id: transaction_id })
 
       if (!searchTransaction) {
         return resp.status(404).json({ message: 'transaction not found' })
@@ -72,7 +70,7 @@ export default new class TransactionsController {
         type: type
       }
 
-      await transactionsRepository.update({ user_id: user_id, id: transaction_id }, {
+      await transactionsRepository.update({ user_id, id: transaction_id }, {
         category_id: data.category_id,
         description: data.description,
         is_fixed: data.isFixed,
@@ -93,13 +91,13 @@ export default new class TransactionsController {
     try {
       const { user_id, transaction_id } = req.params
       const transactionsRepository = getCustomRepository(TransactionsRepository)
-      const searchTransaction = await transactionsRepository.findOne({ user_id: user_id, id: transaction_id })
+      const searchTransaction = await transactionsRepository.findOne({ user_id, id: transaction_id })
 
       if (!searchTransaction) {
         return resp.status(404).json({ message: 'transaction not found' })
       }
 
-      await transactionsRepository.delete({ user_id: user_id, id: transaction_id })
+      await transactionsRepository.delete({ user_id, id: transaction_id })
 
       return resp.status(200).json({ message: 'success' })
     } catch (error) {
