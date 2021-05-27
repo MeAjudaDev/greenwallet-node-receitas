@@ -9,7 +9,7 @@ export default new class TransactionsController {
     try {
       const { user_id } = req.params
       const data = await getCustomRepository(TransactionsRepository).find({
-        where: user_id
+        where: { user_id }
       })
 
       return resp.status(200).json(data)
