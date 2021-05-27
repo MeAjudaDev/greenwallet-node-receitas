@@ -5,14 +5,14 @@ import validate from '../validators/TransactionsValidators'
 const transactionsRoutes = Router()
 
 transactionsRoutes
-  .get('/:userId',
+  .get('/user/:user_id',
     validate.indexTransaction(),
     validate.verifyErrosTransaction,
     TransactionsControllers.index
   )
 
 transactionsRoutes
-  .get('/:userId/:transactionId',
+  .get('/user/:user_id/transaction/:transaction_id',
     validate.showTransaction(),
     validate.verifyErrosTransaction,
     TransactionsControllers.show
@@ -26,14 +26,14 @@ transactionsRoutes
   )
 
 transactionsRoutes
-  .put('/:userId/:transactionId',
+  .put('/user/:user_id/transaction/:transaction_id',
     validate.updateTransaction(),
     validate.verifyErrosTransaction,
     TransactionsControllers.update
   )
 
 transactionsRoutes
-  .delete('/:userId/:transactionId',
+  .delete('/user/:user_id/transaction/:transaction_id',
     validate.deleteTransaction(),
     validate.verifyErrosTransaction,
     TransactionsControllers.delete

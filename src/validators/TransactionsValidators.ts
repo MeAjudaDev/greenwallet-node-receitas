@@ -7,16 +7,16 @@ const allowTypes = ['E', 'R']
 
 const indexTransaction = () => {
   return [
-    param('userId')
+    param('user_id')
       .isNumeric()
   ]
 }
 
 const showTransaction = () => {
   return [
-    param('userId')
+    param('user_id')
       .isNumeric(),
-    param('transactionId')
+    param('transaction_id')
       .isNumeric()
   ]
 }
@@ -62,10 +62,10 @@ const storeTransaction = () => {
 
 const updateTransaction = () => {
   return [
-    param('userId')
+    param('user_id')
       .isNumeric(),
 
-    param('transactionId')
+    param('transaction_id')
       .isNumeric(),
 
     body('description')
@@ -102,9 +102,9 @@ const updateTransaction = () => {
 
 const deleteTransaction = () => {
   return [
-    param('userId')
+    param('user_id')
       .isNumeric(),
-    param('transactionId')
+    param('transaction_id')
       .isNumeric()
   ]
 }
