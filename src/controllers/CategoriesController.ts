@@ -6,7 +6,7 @@ import { CategoryGETResponse } from '../types/Category'
 export default new class CategoryController {
   async index (req: Request, res: Response) {
     try {
-      const userid = req.params.userid
+      const { userid } = req.params
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const responseBody: CategoryGETResponse = {
         message: '',
@@ -30,6 +30,7 @@ export default new class CategoryController {
 
   async show (req: Request, res: Response) {
     try {
+      const { userid, idCategory } = req.params
       const responseBody: CategoryGETResponse = {
         message: '',
         body: []
@@ -37,7 +38,7 @@ export default new class CategoryController {
       let statusCode = 200
 
       const categoriesRepository = getCustomRepository(CategoriesRepository)
-      const category = await categoriesRepository.findByIdAndUserId(req.params)
+      const category = await categoriesRepository.findByIdAndUserId({ userid, idCategory })
 
       responseBody.message += 'Não foi possível encontrar a categoria selecionada'
       statusCode = 404
