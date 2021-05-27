@@ -7,8 +7,8 @@ export default class CategoriesRepository extends Repository<CategoriesModel> {
     return await this.find({ user_id: userid })
   }
 
-  async findById (id: string) {
-    return await this.findOne(id)
+  async findByIdAndUserId ({ userid, idCategory }:any) {
+    return await this.findOne({ user_id: userid, id: idCategory })
   }
 
   async createCategory (body: any) {
