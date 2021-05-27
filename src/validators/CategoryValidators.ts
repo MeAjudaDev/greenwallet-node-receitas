@@ -1,16 +1,17 @@
-import { body, param, header, validationResult } from 'express-validator'
+import { body, param, validationResult } from 'express-validator'
 import { RequestHandler } from 'express'
 const statesAllowed = ['A', 'D', 'E']
 const typesAllowed = ['E', 'R']
 
 export const indexRules = () => {
   return [
-    header('userid').exists().isNumeric()
+    param('userid').exists().isNumeric()
   ]
 }
 
 export const showRules = () => {
   return [
+    param('userid').exists().isNumeric(),
     param('idCategory').exists().isNumeric()
   ]
 }
