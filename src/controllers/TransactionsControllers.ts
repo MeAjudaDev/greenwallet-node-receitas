@@ -41,6 +41,14 @@ export default new class TransactionsController {
     try {
       const transactionsRepository = getCustomRepository(TransactionsRepository)
       const transaction = await transactionsRepository.save(req.body)
+        .catch(erro => {
+          const { errno: errorForeignKeyCode } = erro
+          return { message: errorForeignKeyCode }
+        })
+
+      if (transaction.message) {
+        return resp.status(422).json({ message: 'category not found' })
+      }
 
       return resp.status(201).json({ message: 'success', body: [transaction] })
     } catch (error) {
