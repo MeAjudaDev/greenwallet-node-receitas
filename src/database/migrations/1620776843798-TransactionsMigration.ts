@@ -18,7 +18,7 @@ export class TransactionsMigration1620776843798 implements MigrationInterface {
         },
         {
           name: 'category_id',
-          type: 'varchar'
+          type: 'int'
         },
         {
           name: 'description',
