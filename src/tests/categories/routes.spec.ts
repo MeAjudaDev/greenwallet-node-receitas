@@ -63,6 +63,34 @@ describe("POST Endpoints", () =>{
 })
 
 describe("DELETE Endpoints", () =>{
+  beforeAll(async ()=>{
+    await connection.create();
+  });
+  
+  afterAll(async ()=>{
+    await connection.close();
+  });
+
+  it('should return status code 200 if the delete operation was successful', async()=>{
+    //need to change
+    const existingUserId = 1;
+    const existingCategoryId = 7;
+
+    const res = await request(app)
+    .delete(`/categories/${existingUserId}/${existingCategoryId}`)
+    
+    expect(res.statusCode).toEqual(200)
+  })
+
+  it('should return status code 404 if the delete operation wasnt successful', async ()=>{
+    const notExistingUserId = 25;
+    const notExistingCategoryId = 350;
+
+    const res = await request(app)
+    .delete(`/categories/${notExistingUserId}/${notExistingCategoryId}`)
+
+    expect(res.statusCode).toEqual(404)
+  })
 })
 
 describe("PUT Endpoints", () =>{
