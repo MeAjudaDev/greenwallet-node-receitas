@@ -37,6 +37,29 @@ describe("GET Endpoints", () =>{
 })
 
 describe("POST Endpoints", () =>{
+  beforeAll(async ()=>{
+    await connection.create();
+  });
+  
+  afterAll(async ()=>{
+    await connection.close();
+  });
+
+  it('should return code 200 and body response if it added the category with success', async()=>{
+    const sentBody = {
+      "user_id": 1,
+      "name": "Categoria",
+      "type": "E",
+      "state": "A"
+    }
+
+    const res = await request(app)
+    .post('/categories/')
+    .send(sentBody)
+
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.body).toEqual(sentBody)
+  })
 })
 
 describe("DELETE Endpoints", () =>{

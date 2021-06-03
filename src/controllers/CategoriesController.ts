@@ -19,6 +19,7 @@ export default new class CategoryController {
       statusCode = 404
       if (category.length) {
         responseBody.message = 'Sucesso'
+        statusCode = 200
         responseBody.body = category
       }
       return res.status(statusCode).json(responseBody)
@@ -44,6 +45,7 @@ export default new class CategoryController {
       statusCode = 404
       if (category) {
         responseBody.message = 'Sucesso'
+        statusCode = 200
         responseBody.body?.push(category)
       }
 
@@ -58,8 +60,8 @@ export default new class CategoryController {
     try {
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const categoryCreated = await categoriesRepository.createCategory(req.body)
-
-      return res.status(200).json(categoryCreated)
+      
+      return res.status(200).json({message: 'Success', body:categoryCreated})
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: error.message })
