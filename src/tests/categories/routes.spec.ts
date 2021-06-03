@@ -74,7 +74,7 @@ describe("DELETE Endpoints", () =>{
   it('should return status code 200 if the delete operation was successful', async()=>{
     //need to change
     const existingUserId = 1;
-    const existingCategoryId = 7;
+    const existingCategoryId = 10;
 
     const res = await request(app)
     .delete(`/categories/${existingUserId}/${existingCategoryId}`)
@@ -94,5 +94,19 @@ describe("DELETE Endpoints", () =>{
 })
 
 describe("PUT Endpoints", () =>{
+  it('should return status code 200 if the PUT operation was successful', async()=>{
+    const existingUserId = 1;
+    const existingCategoryId = 4;
+
+    const res = await request(app)
+    .put(`/categories/${existingUserId}/${existingCategoryId}`)
+    .send({
+      "name": "Coisas fúteis",
+      "state": "E",
+      "type": "R"
+    })
+
+    expect(res.statusCode).toEqual(200)
+  })
 })
 
