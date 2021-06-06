@@ -1,26 +1,24 @@
-import { Request, Response } from 'express'
+import { Request, response, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import CategoriesRepository from '../repositories/CategoriesRepository'
-import { CategoryGETResponse } from '../types/Category'
 
 export default new class CategoryController {
   async index (req: Request, res: Response) {
     try {
       const { userid } = req.params
       const categoriesRepository = getCustomRepository(CategoriesRepository)
-      const responseBody: CategoryGETResponse = {
+      const responseBody: any = {
         message: '',
         body: []
       }
       let statusCode = 200
 
       const category = await categoriesRepository.findAll({ userid })
-      responseBody.message = 'O usuário não possui categorias cadastradas'
-      statusCode = 404
-      if (category.length) {
-        responseBody.message = 'Sucesso'
-        statusCode = 200
-        responseBody.body = category
+      responseBody.message = 'Sucesso'
+      responseBody.body = category
+      if (category.length < 1) {
+        responseBody.message = 'O usuário não possui categorias cadastradas'
+        statusCode = 404
       }
       return res.status(statusCode).json(responseBody)
     } catch (error) {
@@ -32,7 +30,7 @@ export default new class CategoryController {
   async show (req: Request, res: Response) {
     try {
       const { userid, idCategory } = req.params
-      const responseBody: CategoryGETResponse = {
+      const responseBody: any = {
         message: '',
         body: []
       }
@@ -41,12 +39,12 @@ export default new class CategoryController {
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const category = await categoriesRepository.findByIdAndUserId({ userid, idCategory })
 
-      responseBody.message += 'Não foi possível encontrar a categoria selecionada'
-      statusCode = 404
-      if (category) {
-        responseBody.message = 'Sucesso'
-        statusCode = 200
-        responseBody.body?.push(category)
+      responseBody.message = 'Sucesso'
+      responseBody.body.push(category)
+      if (!category) {
+        responseBody.message = 'Não foi possível encontrar a categoria selecionada'
+        statusCode = 404
+        delete responseBody.body
       }
 
       return res.status(statusCode).json(responseBody)
