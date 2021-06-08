@@ -2,19 +2,29 @@ const request = require('supertest')
 const app = require("../mockApp")
 import Category from '../../models/CategoriesModel'
 import connection from '../mockConnection'
+import fillDatabase from './db-helper'
 
 describe("GET Endpoints", () =>{
   beforeAll(async ()=>{
-    await connection.create();
+    await connection.create()
+    await connection.clear()
+    await fillDatabase()
   });
   
   afterAll(async ()=>{
-    await connection.close();
+    await connection.clear();
+    await connection.close()
+  });
+
+  it('should statusCode 500 if didnt found a category', async() => {
+    const res = await request(app)
+    .get('/categories/user/1337/category/99999')
+    expect(res.statusCode).toEqual(404)
   });
 
   it('should return a single category', async() => {
     const res = await request(app)
-    .get('/categories/user/1/category/4')
+    .get('/categories/user/1/category/1')
     expect(res.statusCode).toEqual(200)
     expect(res.body.body[0]).toBeInstanceOf(Object)
   });
@@ -22,7 +32,6 @@ describe("GET Endpoints", () =>{
   it('should return multiple categories from a user', async() =>{
     const res = await request(app)
     .get('/categories/user/1')
-
     expect(res.statusCode).toEqual(200)
     expect(res.body.body.length).toBeGreaterThan(0)
   })
@@ -38,11 +47,13 @@ describe("GET Endpoints", () =>{
 
 describe("POST Endpoints", () =>{
   beforeAll(async ()=>{
-    await connection.create();
+    await connection.create()
+    await connection.clear()
   });
   
   afterAll(async ()=>{
-    await connection.close();
+    await connection.clear();
+    await connection.close()
   });
 
   it('should return code 200 and body response if it added the category with success', async()=>{
@@ -50,7 +61,8 @@ describe("POST Endpoints", () =>{
       "user_id": 1,
       "name": "Categoria",
       "type": "E",
-      "state": "A"
+      "state": "A",
+      "id": 1,
     }
 
     const res = await request(app)
@@ -64,48 +76,54 @@ describe("POST Endpoints", () =>{
 
 describe("DELETE Endpoints", () =>{
   beforeAll(async ()=>{
-    await connection.create();
+    await connection.create()
+    await connection.clear()
+    await fillDatabase()
   });
   
   afterAll(async ()=>{
-    await connection.close();
+    await connection.clear();
+    await connection.close()
   });
 
   it('should return status code 200 if the delete operation was successful', async()=>{
-    //need to change
-    const existingUserId = 1;
-    const existingCategoryId = 10;
 
     const res = await request(app)
-    .delete(`/categories/${existingUserId}/${existingCategoryId}`)
+    .delete(`/categories/1/1`)
     
     expect(res.statusCode).toEqual(200)
   })
 
   it('should return status code 404 if the delete operation wasnt successful', async ()=>{
-    const notExistingUserId = 25;
-    const notExistingCategoryId = 350;
 
     const res = await request(app)
-    .delete(`/categories/${notExistingUserId}/${notExistingCategoryId}`)
+    .delete(`/categories/1337/696969`)
 
     expect(res.statusCode).toEqual(404)
   })
 })
 
 describe("PUT Endpoints", () =>{
+  beforeAll(async ()=>{
+    await connection.create()
+    await connection.clear()
+    await fillDatabase()
+  });
+  
+  afterAll(async ()=>{
+    await connection.clear();
+    await connection.close()
+  });
+
   it('should return status code 200 if the PUT operation was successful', async()=>{
-    const existingUserId = 1;
-    const existingCategoryId = 4;
 
     const res = await request(app)
-    .put(`/categories/${existingUserId}/${existingCategoryId}`)
+    .put(`/categories/1/1`)
     .send({
       "name": "Coisas fúteis",
       "state": "E",
       "type": "R"
     })
-
     expect(res.statusCode).toEqual(200)
   })
 })
