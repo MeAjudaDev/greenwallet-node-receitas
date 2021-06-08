@@ -89,7 +89,7 @@ describe("DELETE Endpoints", () =>{
   it('should return status code 200 if the delete operation was successful', async()=>{
 
     const res = await request(app)
-    .delete(`/categories/1/1`)
+    .delete(`/categories/user/1/category/1`)
     
     expect(res.statusCode).toEqual(200)
   })
@@ -97,7 +97,7 @@ describe("DELETE Endpoints", () =>{
   it('should return status code 404 if the delete operation wasnt successful', async ()=>{
 
     const res = await request(app)
-    .delete(`/categories/1337/696969`)
+    .delete(`/categories/user/1337/category/696969`)
 
     expect(res.statusCode).toEqual(404)
   })
@@ -118,7 +118,7 @@ describe("PUT Endpoints", () =>{
   it('should return status code 200 if the PUT operation was successful', async()=>{
 
     const res = await request(app)
-    .put(`/categories/1/1`)
+    .put(`/categories/user/1/category/1`)
     .send({
       "name": "Coisas fúteis",
       "state": "E",
