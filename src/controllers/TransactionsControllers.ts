@@ -59,7 +59,7 @@ export default new class TransactionsController {
   async update (req: Request, resp: Response) {
     try {
       const { user_id, transaction_id } = req.params
-      const { description, value, state, type, due_date: dueDate, is_fixed: isFixed } = req.body
+      const { description, category_id, value, state, type, due_date: dueDate, is_fixed: isFixed } = req.body
       const transactionsRepository = getCustomRepository(TransactionsRepository)
       const searchTransaction = await transactionsRepository.findOne({ user_id, id: transaction_id })
 
@@ -69,7 +69,7 @@ export default new class TransactionsController {
 
       const data = {
         user_id: user_id,
-        category_id: transaction_id,
+        category_id: category_id,
         description: description,
         value: value,
         due_Date: format(parse(dueDate, 'dd/MM/yyyy', new Date()), 'yyyy/MM/dd'),
@@ -78,15 +78,19 @@ export default new class TransactionsController {
         type: type
       }
 
-      await transactionsRepository.update({ user_id, id: transaction_id }, {
-        category_id: data.category_id,
-        description: data.description,
-        is_fixed: data.isFixed,
-        due_date: data.due_Date,
-        state: data.state,
-        type: data.type,
-        value: data.value
-      })
+      try {
+        await transactionsRepository.update({ user_id, id: transaction_id }, {
+          category_id: data.category_id,
+          description: data.description,
+          is_fixed: data.isFixed,
+          due_date: data.due_Date,
+          state: data.state,
+          type: data.type,
+          value: data.value
+        })
+      } catch (error) {
+        return resp.status(404).json({ message: "category not found" })
+      }
 
       return resp.status(200).json({ message: 'success', body: [data] })
     } catch (error) {
