@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity('categories')
 export default class Categories {
-    @PrimaryColumn()
-    id: string
+    @PrimaryGeneratedColumn('increment')
+    public id: string
 
     @Column()
     user_id: string

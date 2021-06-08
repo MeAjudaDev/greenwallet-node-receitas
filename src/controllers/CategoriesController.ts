@@ -1,27 +1,25 @@
-import { Request, Response } from 'express'
+import { Request, response, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import CategoriesRepository from '../repositories/CategoriesRepository'
-import { CategoryGETResponse } from '../types/Category'
 
 export default new class CategoryController {
   async index (req: Request, res: Response) {
     try {
       const { userid } = req.params
       const categoriesRepository = getCustomRepository(CategoriesRepository)
-      const responseBody: CategoryGETResponse = {
+      const responseBody: any = {
         message: '',
         body: []
       }
-      let statusCode = 200
 
       const category = await categoriesRepository.findAll({ userid })
-      responseBody.message = 'O usuário não possui categorias cadastradas'
-      statusCode = 404
-      if (category.length) {
-        responseBody.message = 'Sucesso'
-        responseBody.body = category
+      responseBody.message = 'Sucesso'
+      responseBody.body = category
+      if (category.length < 1) {
+        responseBody.message = 'O usuário não possui categorias cadastradas'
+        return res.status(404).json(responseBody)
       }
-      return res.status(statusCode).json(responseBody)
+      return res.status(200).json(responseBody)
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: error })
@@ -31,23 +29,23 @@ export default new class CategoryController {
   async show (req: Request, res: Response) {
     try {
       const { userid, idCategory } = req.params
-      const responseBody: CategoryGETResponse = {
+      const responseBody: any = {
         message: '',
         body: []
       }
-      let statusCode = 200
 
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const category = await categoriesRepository.findByIdAndUserId({ userid, idCategory })
 
-      responseBody.message += 'Não foi possível encontrar a categoria selecionada'
-      statusCode = 404
-      if (category) {
-        responseBody.message = 'Sucesso'
-        responseBody.body?.push(category)
+      responseBody.message = 'Sucesso'
+      responseBody.body.push(category)
+      if (!category) {
+        responseBody.message = 'Não foi possível encontrar a categoria selecionada'
+        delete responseBody.body
+        return res.status(404).json(responseBody)
       }
 
-      return res.status(statusCode).json(responseBody)
+      return res.status(200).json(responseBody)
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: error.message })
@@ -58,8 +56,8 @@ export default new class CategoryController {
     try {
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const categoryCreated = await categoriesRepository.createCategory(req.body)
-
-      return res.status(200).json(categoryCreated)
+      
+      return res.status(200).json({message: 'Success', body:categoryCreated})
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: error.message })
