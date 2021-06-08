@@ -1,8 +1,10 @@
+import path from 'path'
 import {createConnection, getConnection} from 'typeorm';
+import * as connectionJson from '../../ormconfig-tests.json'
 
 const connection = {
   async create(){
-    await createConnection();
+    const connection = await createConnection();
   },
 
   async close(){
@@ -10,13 +12,12 @@ const connection = {
   },
 
   async clear(){
-    const connection = getConnection();
-    const entities = connection.entityMetadatas;
+    const entities = getConnection().entityMetadatas;
 
-    entities.forEach(async (entity) => {
-      const repository = connection.getRepository(entity.name);
-      await repository.query(`DELETE FROM ${entity.tableName}`);
-    });
+    for (const entity of entities) {
+        const repository = getConnection().getRepository(entity.name); // Get repository
+        await repository.clear(); // Clear each entity table's content
+    }
   },
 };
 

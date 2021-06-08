@@ -16,4 +16,4 @@ app.use(express.json())
 app.use('/transactions', transactionsRoutes)
 app.use('/categories', categoriesRoutes)
 
-module.exports = app.listen(3001)
+module.exports = app
