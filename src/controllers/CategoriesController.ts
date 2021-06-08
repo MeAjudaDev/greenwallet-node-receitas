@@ -11,16 +11,15 @@ export default new class CategoryController {
         message: '',
         body: []
       }
-      let statusCode = 200
 
       const category = await categoriesRepository.findAll({ userid })
       responseBody.message = 'Sucesso'
       responseBody.body = category
       if (category.length < 1) {
         responseBody.message = 'O usuário não possui categorias cadastradas'
-        statusCode = 404
+        return res.status(404).json(responseBody)
       }
-      return res.status(statusCode).json(responseBody)
+      return res.status(200).json(responseBody)
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: error })
@@ -34,7 +33,6 @@ export default new class CategoryController {
         message: '',
         body: []
       }
-      let statusCode = 200
 
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const category = await categoriesRepository.findByIdAndUserId({ userid, idCategory })
@@ -43,11 +41,11 @@ export default new class CategoryController {
       responseBody.body.push(category)
       if (!category) {
         responseBody.message = 'Não foi possível encontrar a categoria selecionada'
-        statusCode = 404
         delete responseBody.body
+        return res.status(404).json(responseBody)
       }
 
-      return res.status(statusCode).json(responseBody)
+      return res.status(200).json(responseBody)
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: error.message })

@@ -1,10 +1,26 @@
 import path from 'path'
 import {createConnection, getConnection} from 'typeorm';
-import * as connectionJson from '../../ormconfig-tests.json'
+import connectionJson from '../../ormconfig-tests.json'
 
 const connection = {
   async create(){
-    const connection = await createConnection();
+    const connection = await createConnection({
+      "type": "mysql",
+      "host": "localhost",
+      "port": 3306,
+      "username": "pepe",
+      "password": "q2o4u2i4pepe",
+      "database": "receitas",
+      "entities": [
+          "src/models/*.ts"
+       ],
+       "migrations": [
+          "src/database/migrations/*.ts"
+       ],
+       "cli": {
+           "migrationsDir": "src/database/migrations"
+       }
+   });
   },
 
   async close(){
