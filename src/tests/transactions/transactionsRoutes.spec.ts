@@ -28,59 +28,96 @@ const transactionData = {
 beforeAll(async ()=>{
     await connection.create();
     await getCustomRepository(CategoriesRepository).save(categoryData)
-    //const getIdCategory = await getCustomRepository(CategoriesRepository).findOne({ name: categoryData.name })
-    //transactionData.category_id = getIdCategory!.id 
-    //await getCustomRepository(TransactionsRepository).save(transactionData)
-    /* const getIdTransaction = await getCustomRepository(TransactionsRepository).findOne({ description: transactionData.description })
-    transactionData.id = getIdTransaction!.id */
+    const getIdCategory = await getCustomRepository(CategoriesRepository).findOne({ name: categoryData.name })
+    transactionData.category_id = getIdCategory!.id 
+    await getCustomRepository(TransactionsRepository).save(transactionData)
+    const getIdTransaction = await getCustomRepository(TransactionsRepository).findOne({ description: transactionData.description })
+    transactionData.id = getIdTransaction!.id 
 });
 
-describe("Test Routes GET Transactions", () => {
-    it("Should return statusCode 200 if exist user_id", async () => {
+describe("Tests Routes GET Transactions", () => {
+    it("Should return statusCode 200 if list all transactions of user_id", async () => {
         const response = await request(app)
             .get(`/transactions/user/${transactionData.user_id}`)
-            
-            console.log(response.body)
+          
         expect(response.statusCode).toBe(200)
+    })
+
+    it("Should return statusCode 200 if find transaction", async () => {
+      const response = await request(app)
+          .get(`/transactions/user/1/transaction/${transactionData.id}`)
+        
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toMatchObject({ message: "success" })
+    })
+
+    it("Should return statusCode 404 if not find transaction", async () => {
+      const response = await request(app)
+          .get(`/transactions/user/1/transaction/0`)
+      
+      expect(response.statusCode).toBe(404)
+      expect(response.body).toMatchObject({ message: 'transaction not found' })
     })
 }) 
 
-/* describe("Test Routes: POST Transactions", () => {
-    it("Should return statusCode 201 if transaction was sucessfully created", async () => {
+describe("Tests Routes: POST Transactions", () => {
+    it("Should return statusCode 201 and return message success with body if transaction was successfully created", async () => {
         const response = await request(app)
             .post("/transactions")
             .send(transactionData)
         
         expect(response.statusCode).toBe(201)
-        expect(response.body).toMatchObject({ message: "success", body: [] })
+        expect(response.body).toMatchObject({ message: "success", body: [transactionData] })
     })
 
-    it("Should return statusCode 422 if has errors in body", (done) => {
-        request(app)
-            .post("/transactions")
-            .send("")
-            .expect(422)
-            .end((error, resp) => {
-                if(error) return done(error)
-                return done()
-            })
+    it("Should return statusCode 422 if has errors in body", async () => {
+        const response = await request(app)
+          .post("/transactions")
+          .send("")
+        
+        expect(response.statusCode).toBe(422)
     })
-})  */
-/* 
-describe("Test Routes: PUT Transactions", () => {
-    it("Should return stausCode 200 if update was sucessfully", async () => {
+}) 
+
+describe("Tests Routes: PUT Transactions", () => {
+    it("Should return stausCode 200 if update was successfully", async () => {
         const response = await request(app)
             .put(`/transactions/user/1/transaction/${transactionData.id}`)
             .send(transactionData)
 
         expect(response.statusCode).toBe(200)
         expect(response.body).toMatchObject({ message: "success"})
- 
-    })  
+    })
+    
+    it("Should return statusCode 404 if not found transaction in routes update", async () => {
+      const response = await request(app)
+      .put(`/transactions/user/0/transaction/0`)
+      .send(transactionData)
+
+      expect(response.statusCode).toBe(404)
+      expect(response.body).toMatchObject({ message: 'transaction not found' })
+    })
+}) 
+
+describe("Test Routes: DELETE Transactions", () => {
+  it("Should return statusCode 200 if delete was successfully", async () => {
+    const response = await request(app).delete(`/transactions/user/1/transaction/${transactionData.id}`)
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toMatchObject({ message: "success" })
+  })
+
+  it("Should return statusCode 404 if not found transaction in route delete", async () => {
+    const response = await request(app).delete(`/transactions/user/1/transaction/0`)
+
+    expect(response.statusCode).toBe(404)
+    expect(response.body).toMatchObject({ message: 'transaction not found' })
+  })
+  
 })
- */
+ 
 
 afterAll(async ()=>{
-    //await getCustomRepository(CategoriesRepository).delete({ id: transactionData.category_id })
+    await getCustomRepository(CategoriesRepository).delete({ id: transactionData.category_id })
     await connection.close();
 })

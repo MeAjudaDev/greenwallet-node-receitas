@@ -1,7 +1,7 @@
 import dotnev from "dotenv"
 import path from 'path'
 import {createConnection, getConnection} from 'typeorm';
-import connectionJson from '../../ormconfig-tests.json'
+import connectionJson from '../../ormconfig.json'
 
 dotnev.config()
 
