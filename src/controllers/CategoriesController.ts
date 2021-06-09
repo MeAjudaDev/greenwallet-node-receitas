@@ -13,10 +13,10 @@ export default new class CategoryController {
       }
 
       const category = await categoriesRepository.findAll({ userid })
-      responseBody.message = 'Sucesso'
+      responseBody.message = 'Success'
       responseBody.body = category
       if (category.length < 1) {
-        responseBody.message = 'O usuário não possui categorias cadastradas'
+        responseBody.message = 'The user does not have registered categories'
         return res.status(404).json(responseBody)
       }
       return res.status(200).json(responseBody)
@@ -37,10 +37,10 @@ export default new class CategoryController {
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const category = await categoriesRepository.findByIdAndUserId({ userid, idCategory })
 
-      responseBody.message = 'Sucesso'
+      responseBody.message = 'Success'
       responseBody.body.push(category)
       if (!category) {
-        responseBody.message = 'Não foi possível encontrar a categoria selecionada'
+        responseBody.message = 'Could not find selected category'
         delete responseBody.body
         return res.status(404).json(responseBody)
       }
@@ -80,9 +80,9 @@ export default new class CategoryController {
       })
 
       if (categoryUpdated.raw.affectedRows < 1) {
-        return res.status(404).json({ message: 'Não foi possível editar a categoria' })
+        return res.status(404).json({ message: 'Could not edit category' })
       }
-      return res.status(200).json({ message: 'Sucesso' })
+      return res.status(200).json({ message: 'Success' })
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: error.message })
@@ -97,9 +97,9 @@ export default new class CategoryController {
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const categoryDeleted = await categoriesRepository.deleteCategory(req.params.idCategory)
       if (categoryDeleted.raw.affectedRows < 1) {
-        return res.status(404).json({ message: 'Não foi possível deletar a categoria' })
+        return res.status(404).json({ message: 'Could not delete category' })
       }
-      return res.status(200).json({ message: 'Sucesso' })
+      return res.status(200).json({ message: 'Success' })
     } catch (error) {
       console.error(error)
       return res.status(500).json({ message: error.message })
