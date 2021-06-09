@@ -121,7 +121,7 @@ const verifyErrosTransaction = (req: Request, resp: Response, next: NextFunction
 
   if (!erros.isEmpty()) {
     return resp.status(422).json({
-      message: `have ${dataErros.length} erros`,
+      message: `have ${dataErros.length} errors`,
       erros: dataErros
     })
   }
