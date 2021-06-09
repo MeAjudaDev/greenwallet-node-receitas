@@ -1,16 +1,19 @@
+import dotnev from "dotenv"
 import path from 'path'
 import {createConnection, getConnection} from 'typeorm';
 import connectionJson from '../../ormconfig-tests.json'
+
+dotnev.config()
 
 const connection = {
   async create(){
     const connection = await createConnection({
       "type": "mysql",
-      "host": "localhost",
-      "port": 3306,
-      "username": "pepe",
-      "password": "q2o4u2i4pepe",
-      "database": "receitas",
+      "host": process.env.DATABASE_HOST,
+      "port": Number(process.env.DATABASE_HOST),
+      "username": process.env.DATABASE_USERNAME,
+      "password": process.env.DATABASE_PASSWORD,
+      "database": process.env.DATABASE_NAME,
       "entities": [
           "src/models/*.ts"
        ],
