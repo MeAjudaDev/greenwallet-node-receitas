@@ -39,16 +39,22 @@ export default new class TransactionsController {
   async create (req: Request, resp: Response) {
     try {
       const transactionsRepository = getCustomRepository(TransactionsRepository)
-      const transaction = await transactionsRepository.save(req.body)
-        .catch(erro => {
+      const date_parse = parse(req.body.due_date, "dd/MM/yyyy", new Date())
+
+      const transaction = await transactionsRepository
+      .save({
+        ...req.body,
+        due_date: date_parse,
+      })
+      .catch(erro => {
           const { errno: errorForeignKeyCode } = erro
           return { message: errorForeignKeyCode }
-        })
+        })  
 
       if (transaction.message) {
         return resp.status(422).json({ message: 'category not found' })
-      }
-
+      }   
+ 
       return resp.status(201).json({ message: 'success', body: [transaction] })
     } catch (error) {
       console.error(error)
