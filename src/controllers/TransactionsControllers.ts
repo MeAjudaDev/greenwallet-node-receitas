@@ -25,6 +25,19 @@ export default new class TransactionsController {
       const transactionsRepository = getCustomRepository(TransactionsRepository)
       const searchTransaction = await transactionsRepository.findOne({ user_id, id: transaction_id })
 
+      if(Object.values(req.query).length){
+        const { date_begin, date_end } = req.query
+        const dateBeginParse = format(parse(String(date_begin), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
+        const dateEndParse = format(parse(String(date_end), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
+
+        const searchRangeDate = await transactionsRepository
+          .query(`SELECT * FROM transactions WHERE due_date BETWEEN '${dateBeginParse}' AND '${dateEndParse}' ORDER BY due_date`)
+
+
+        return resp.status(200).json(searchRangeDate)
+      }
+
+  
       if (!searchTransaction) {
         return resp.status(404).json({ message: 'transaction not found' })
       }
