@@ -1,25 +1,24 @@
-import path from 'path'
+require('dotenv').config()
 import {createConnection, getConnection} from 'typeorm';
-import connectionJson from '../../ormconfig-tests.json'
 
 const connection = {
   async create(){
     const connection = await createConnection({
       "type": "mysql",
-      "host": "localhost",
+      "host": process.env.HOST,
       "port": 3306,
-      "username": "pepe",
-      "password": "q2o4u2i4pepe",
-      "database": "receitas",
+      "username": process.env.USER,
+      "password": process.env.PASSWORD,
+      "database": process.env.DATABASE,
       "entities": [
-          "src/models/*.ts"
-       ],
-       "migrations": [
+        "src/models/*.ts"
+      ],
+      "migrations": [
           "src/database/migrations/*.ts"
-       ],
-       "cli": {
-           "migrationsDir": "src/database/migrations"
-       }
+      ],
+      "cli": {
+          "migrationsDir": "src/database/migrations"
+      }
    });
   },
 
