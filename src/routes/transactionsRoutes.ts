@@ -11,13 +11,21 @@ transactionsRoutes
     TransactionsControllers.index
   )
 
+  
 transactionsRoutes
   .get('/user/:user_id/transaction/:transaction_id',
-    validate.showTransaction(),
-    validate.verifyErrosTransaction,
-    TransactionsControllers.show
+  validate.showTransaction(),
+  validate.verifyErrosTransaction,
+  TransactionsControllers.show
   )
-
+  
+transactionsRoutes
+  .get('/user/:user_id/export',
+    validate.exportTransactions(),
+    validate.verifyErrosTransaction,
+    TransactionsControllers.export
+  )
+  
 transactionsRoutes
   .post('/',
     validate.storeTransaction(),
