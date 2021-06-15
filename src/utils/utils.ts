@@ -31,7 +31,6 @@ export const generatePDF = async(data:Array<Transactions>) =>{
     doc.text('Value: ' + transaction.value)
     doc.text('Due date: ' + transaction.due_date.getMonth() + '/' + transaction.due_date.getDate() + '/' + transaction.due_date.getFullYear())
     doc.moveDown()
-    console.log('a')
   }
   return doc
 } 

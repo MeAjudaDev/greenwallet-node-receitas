@@ -3,7 +3,6 @@ import TransactionsControllers from '../controllers/TransactionsControllers'
 import validate from '../validators/TransactionsValidators'
 
 const transactionsRoutes = Router()
-console.log('a')
 transactionsRoutes
   .get('/user/:user_id',
     validate.indexTransaction(),
