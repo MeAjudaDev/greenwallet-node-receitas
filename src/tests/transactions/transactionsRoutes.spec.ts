@@ -25,14 +25,30 @@ const transactionData = {
     state: "A"
 }
 
+const createCategory = async () => {
+    await getCustomRepository(CategoriesRepository).save(categoryData)
+
+}
+const createTransaction = async (transactionData: object) => {
+    return await getCustomRepository(TransactionsRepository).save(transactionData)
+}
+
+const findCategoryName: any = async (name: string) => {
+    return await getCustomRepository(CategoriesRepository).findOne({ name })
+}
+
+const findTransactionDescription: any = async (description: string) => {
+    return await getCustomRepository(TransactionsRepository).findOne({ description })
+}
+
 beforeAll(async ()=>{
     await connection.create();
-    await getCustomRepository(CategoriesRepository).save(categoryData)
-    const getIdCategory = await getCustomRepository(CategoriesRepository).findOne({ name: categoryData.name })
-    transactionData.category_id = getIdCategory!.id 
-    await getCustomRepository(TransactionsRepository).save(transactionData)
-    const getIdTransaction = await getCustomRepository(TransactionsRepository).findOne({ description: transactionData.description })
-    transactionData.id = getIdTransaction!.id 
+    await createCategory()
+    const getIdCategory = await findCategoryName(categoryData.name)
+    transactionData.category_id = getIdCategory.id 
+    await createTransaction(transactionData)
+    const getIdTransaction = await findTransactionDescription(transactionData.description)
+    transactionData.id = getIdTransaction.id 
 });
 
 describe("Tests Routes GET Transactions", () => {
