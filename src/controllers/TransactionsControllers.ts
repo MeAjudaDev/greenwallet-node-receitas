@@ -3,7 +3,6 @@ import { parse, format } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { parseAsync } from 'json2csv'
-import { generatePDF } from '../utils/utils'
 import TransactionsRepository from '../repositories/TransactionsRepository'
 
 export default new class TransactionsController {
@@ -139,27 +138,22 @@ export default new class TransactionsController {
 
       const transactionsRepository = getCustomRepository(TransactionsRepository)
 
-      const transactionsData = await transactionsRepository
+      const data = await transactionsRepository
       .query(`SELECT * FROM transactions WHERE user_id = ${user_id} AND due_date BETWEEN '${parsedStartDate}' AND '${parsedEndDate}' ORDER BY due_date`)
-      
-      if(transactionsData.length < 1) return res.status(404).json({message: "Couldn't find any transactions for the given user."})
 
       switch(type){
         case "csv":
+
           //fields that goes into the csv
           const fields: any = ['description', 'value', 'is_fixed', 'due_date']
           const opts = {fields}
 
           //use parseAsync, so that it doesn't stops nodejs event loop
-          const csv = await parseAsync(transactionsData, opts)
+          const csv = await parseAsync(data, opts)
 
           res.attachment(String(Date.now()) + '.csv')
           return res.status(200).send(csv)
         case "pdf":
-          res.contentType("application/pdf");
-          const doc = await generatePDF(transactionsData)
-          doc.pipe(res)
-          doc.end()
           break
         default:
           break
