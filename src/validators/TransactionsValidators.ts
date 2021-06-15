@@ -42,11 +42,7 @@ const storeTransaction = () => {
       .isBoolean(),
 
     body('due_date')
-      .custom((value) => {
-        const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
-
-        return !!result
-      }),
+      .custom((value) => isValidDate(value)),
 
     body('state')
       .custom((value) => {
@@ -82,11 +78,7 @@ const updateTransaction = () => {
       .isBoolean(),
 
     body('due_date')
-      .custom((value) => {
-        const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
-
-        return !!result
-      }),
+      .custom((value) => isValidDate(value)),
 
     body('state')
       .custom((value) => {
@@ -112,15 +104,14 @@ const deleteTransaction = () => {
 const exportTransactions = () => {
   return [
     query('user_id').exists().isNumeric(),
-    query('start_date').custom((value) => {
-      const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
-      return !!result
-    }),
-    query('end_date').custom((value) => {
-      const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
-      return !!result
-    }),
+    query('start_date').custom((value) => isValidDate(value)),
+    query('end_date').custom((value) => isValidDate(value)),
   ]
+}
+
+const isValidDate = (value) =>{
+  const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
+  return !!result
 }
 
 const verifyErrosTransaction = (req: Request, resp: Response, next: NextFunction) => {
