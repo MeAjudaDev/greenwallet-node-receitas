@@ -106,7 +106,6 @@ const exportTransactions = () => {
     query('user_id').exists().isNumeric(),
     query('start_date').custom((value) => isValidDate(value)),
     query('end_date').custom((value) => isValidDate(value)),
-    query('type').isIn(["pdf", "csv"])
   ]
 }
 
