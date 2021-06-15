@@ -1,6 +1,6 @@
 import { isValid, parse } from 'date-fns'
 import { NextFunction, Request, Response } from 'express'
-import { body, param, validationResult } from 'express-validator'
+import { body, param, query, validationResult } from 'express-validator'
 
 const allowState = ['A', 'D', 'E']
 const allowTypes = ['E', 'R']
@@ -109,6 +109,21 @@ const deleteTransaction = () => {
   ]
 }
 
+const exportTransactions = () => {
+  return [
+    query('user_id').exists().isNumeric(),
+    query('type').isIn(["pdf", "csv"]),
+    query('start_date').custom((value) => {
+      const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
+      return !!result
+    }),
+    query('end_date').custom((value) => {
+      const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
+      return !!result
+    }),
+  ]
+}
+
 const verifyErrosTransaction = (req: Request, resp: Response, next: NextFunction) => {
   const erros = validationResult(req)
 
@@ -135,5 +150,6 @@ export default {
   storeTransaction,
   updateTransaction,
   deleteTransaction,
+  exportTransactions,
   verifyErrosTransaction
 }
