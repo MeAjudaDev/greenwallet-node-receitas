@@ -2,6 +2,7 @@
 import { parse, format, subDays, formatDistance } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
+import { convertDateToDB, newDateFormated, subtractDaysDateCurrent } from '../helpers/dates'
 import TransactionsRepository from '../repositories/TransactionsRepository'
 
 export default new class TransactionsController {
@@ -12,8 +13,8 @@ export default new class TransactionsController {
 
       if(req.query.date_begin && req.query.date_end){
         const { date_begin, date_end } = req.query
-        const dateBeginParse = format(parse(String(date_begin), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
-        const dateEndParse = format(parse(String(date_end), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
+        const dateBeginParse = convertDateToDB(String(date_begin))
+        const dateEndParse = convertDateToDB(String(date_end))
 
         const searchRangeDate = await transactionsRepository
           .query(`SELECT * FROM transactions WHERE user_id = ${user_id} AND due_date BETWEEN '${dateBeginParse}' AND '${dateEndParse}' ORDER BY due_date`)
@@ -24,8 +25,8 @@ export default new class TransactionsController {
       if(req.query.range){
         const allow_range = [7, 15, 30, 60, 90]
         const range = Number(req.query.range)
-        const date_today = format(new Date(), "yyyy/MM/dd")
-        const date_old = format(subDays(new Date(), Number(range)), "yyyy/MM/dd")
+        const date_today = newDateFormated()
+        const date_old = subtractDaysDateCurrent(range)
 
         if(!allow_range.includes(range)){
           return resp.status(422).json({ message: "invalid range" })
