@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity('transactions')
 export default class Transactions {
-    @PrimaryGeneratedColumn("increment")
+    @PrimaryGeneratedColumn()
     id: string
 
     @Column()
