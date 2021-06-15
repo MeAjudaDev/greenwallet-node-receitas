@@ -124,16 +124,23 @@ const exportTransactions = () => {
 }
 
 const verifyErrosTransaction = (req: Request, resp: Response, next: NextFunction) => {
-  const errors = validationResult(req)
-  if (errors.isEmpty()) {
-    return next()
-  }
-  const extractedErrors: any = []
-  errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }))
+  const erros = validationResult(req)
 
-  return resp.status(422).json({
-    errors: extractedErrors
+  const dataErros = erros.array().map(result => {
+    return {
+      path: result.param,
+      message: result.msg
+    }
   })
+
+  if (!erros.isEmpty()) {
+    return resp.status(422).json({
+      message: `have ${dataErros.length} errors`,
+      erros: dataErros
+    })
+  }
+
+  next()
 }
 
 export default {
