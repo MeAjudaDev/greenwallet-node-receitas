@@ -1,6 +1,6 @@
 import { isValid, parse } from 'date-fns'
 import { NextFunction, Request, Response } from 'express'
-import { body, param, query, validationResult } from 'express-validator'
+import { body, param, validationResult } from 'express-validator'
 
 const allowState = ['A', 'D', 'E']
 const allowTypes = ['E', 'R']
@@ -42,7 +42,11 @@ const storeTransaction = () => {
       .isBoolean(),
 
     body('due_date')
-      .custom((value) => isValidDate(value)),
+      .custom((value) => {
+        const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
+
+        return !!result
+      }),
 
     body('state')
       .custom((value) => {
@@ -78,7 +82,11 @@ const updateTransaction = () => {
       .isBoolean(),
 
     body('due_date')
-      .custom((value) => isValidDate(value)),
+      .custom((value) => {
+        const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
+
+        return !!result
+      }),
 
     body('state')
       .custom((value) => {
@@ -101,31 +109,24 @@ const deleteTransaction = () => {
   ]
 }
 
-const exportTransactions = () => {
-  return [
-    query('user_id').exists().isNumeric(),
-    query('start_date').custom((value) => isValidDate(value)),
-    query('end_date').custom((value) => isValidDate(value)),
-    query('type').isIn(["pdf", "csv"])
-  ]
-}
-
-const isValidDate = (value) =>{
-  const result = isValid(parse(value, 'dd/MM/yyyy', new Date()))
-  return !!result
-}
-
 const verifyErrosTransaction = (req: Request, resp: Response, next: NextFunction) => {
-  const errors = validationResult(req)
-  if (errors.isEmpty()) {
-    return next()
-  }
-  const extractedErrors: any = []
-  errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }))
+  const erros = validationResult(req)
 
-  return resp.status(422).json({
-    errors: extractedErrors
+  const dataErros = erros.array().map(result => {
+    return {
+      path: result.param,
+      message: result.msg
+    }
   })
+
+  if (!erros.isEmpty()) {
+    return resp.status(422).json({
+      message: `have ${dataErros.length} errors`,
+      erros: dataErros
+    })
+  }
+
+  next()
 }
 
 export default {
@@ -134,6 +135,5 @@ export default {
   storeTransaction,
   updateTransaction,
   deleteTransaction,
-  exportTransactions,
   verifyErrosTransaction
 }
