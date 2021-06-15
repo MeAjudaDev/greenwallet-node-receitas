@@ -123,13 +123,4 @@ export default new class TransactionsController {
       return resp.status(500).json({ message: error })
     }
   }
-
-  async export (req: Request, res: Response) {
-    try {
-      console.log(req.query)
-    } catch (error) {
-      console.error(error)
-      return res.status(500).json({ message: error })
-    }
-  }
 }()
