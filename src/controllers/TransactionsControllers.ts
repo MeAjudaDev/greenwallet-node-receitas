@@ -2,13 +2,43 @@
 import { parse, format } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
+import { convertDateToDB, newDateFormated, subtractDaysDateCurrent } from '../helpers/datesHelpers'
 import TransactionsRepository from '../repositories/TransactionsRepository'
 
 export default new class TransactionsController {
   async index (req: Request, resp: Response) {
     try {
       const { user_id } = req.params
-      const data = await getCustomRepository(TransactionsRepository).find({
+      const transactionsRepository = getCustomRepository(TransactionsRepository)
+
+      if(req.query.date_begin && req.query.date_end){
+        const { date_begin, date_end } = req.query
+        const dateBeginParse = convertDateToDB(String(date_begin))
+        const dateEndParse = convertDateToDB(String(date_end))
+
+        const searchRangeDate = await transactionsRepository
+          .query(`SELECT * FROM transactions WHERE user_id = ${user_id} AND due_date BETWEEN '${dateBeginParse}' AND '${dateEndParse}' ORDER BY due_date`)
+
+        return resp.status(200).json(searchRangeDate)
+      }
+
+      if(req.query.range){
+        const allow_range = [7, 15, 30, 60, 90]
+        const range = Number(req.query.range)
+        const date_today = newDateFormated()
+        const date_old = subtractDaysDateCurrent(range)
+
+        if(!allow_range.includes(range)){
+          return resp.status(422).json({ message: "invalid range" })
+        }
+
+        const searchRangeDate = await transactionsRepository
+          .query(`SELECT * FROM transactions WHERE user_id = ${user_id} AND due_date BETWEEN '${date_old}' AND '${date_today}' ORDER BY due_date`)
+
+          return resp.status(200).json(searchRangeDate)
+      }
+
+      const data = await transactionsRepository.find({
         where: { user_id }
       })
 
