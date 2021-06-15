@@ -2,6 +2,8 @@
 import { parse, format } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
+import { parseAsync } from 'json2csv'
+import { generatePDF } from '../utils/utils'
 import { convertDateToDB, newDateFormated, subtractDaysDateCurrent } from '../helpers/datesHelpers'
 import TransactionsRepository from '../repositories/TransactionsRepository'
 
@@ -151,6 +153,50 @@ export default new class TransactionsController {
     } catch (error) {
       console.error(error)
       return resp.status(500).json({ message: error })
+    }
+  }
+
+  async export (req: Request, res: Response) {
+    try {
+      const { user_id, start_date, end_date, type } = req.query
+
+      const formatDateToDBFormat = (date: any) =>{
+        return format(parse(String(date), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
+      }
+
+      const parsedStartDate = formatDateToDBFormat(start_date)
+      const parsedEndDate = formatDateToDBFormat(end_date)
+
+      const transactionsRepository = getCustomRepository(TransactionsRepository)
+
+      const transactionsData = await transactionsRepository
+      .query(`SELECT * FROM transactions WHERE user_id = ${user_id} AND due_date BETWEEN '${parsedStartDate}' AND '${parsedEndDate}' ORDER BY due_date`)
+      
+      if(transactionsData.length < 1) return res.status(404).json({message: "Couldn't find any transactions for the given user."})
+
+      switch(type){
+        case "csv":
+          //fields that goes into the csv
+          const fields: any = ['description', 'value', 'is_fixed', 'due_date']
+          const opts = {fields}
+
+          //use parseAsync, so that it doesn't stops nodejs event loop
+          const csv = await parseAsync(transactionsData, opts)
+
+          res.attachment(String(Date.now()) + '.csv')
+          return res.status(200).send(csv)
+        case "pdf":
+          res.contentType("application/pdf");
+          const doc = await generatePDF(transactionsData)
+          doc.pipe(res)
+          doc.end()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: error })
     }
   }
 }()

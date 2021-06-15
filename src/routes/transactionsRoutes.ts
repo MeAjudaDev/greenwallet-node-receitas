@@ -3,7 +3,7 @@ import TransactionsControllers from '../controllers/TransactionsControllers'
 import validate from '../validators/TransactionsValidators'
 
 const transactionsRoutes = Router()
-
+console.log('a')
 transactionsRoutes
   .get('/user/:user_id',
     validate.indexTransaction(),
@@ -12,10 +12,17 @@ transactionsRoutes
   )
 
 transactionsRoutes
-  .get('/user/:user_id/transaction/:transaction_id',
-    validate.showTransaction(),
+.get('/user/:user_id',
+  validate.indexTransaction(),
+  validate.verifyErrosTransaction,
+  TransactionsControllers.index
+)
+
+transactionsRoutes
+  .get('/user/:user_id/export',
+    validate.exportTransactions(),
     validate.verifyErrosTransaction,
-    TransactionsControllers.show
+    TransactionsControllers.export
   )
 
 transactionsRoutes
