@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { parse, format } from 'date-fns'
+import { parse, format, subDays, formatDistance } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import TransactionsRepository from '../repositories/TransactionsRepository'
@@ -25,19 +25,33 @@ export default new class TransactionsController {
       const transactionsRepository = getCustomRepository(TransactionsRepository)
       const searchTransaction = await transactionsRepository.findOne({ user_id, id: transaction_id })
 
-      if(Object.values(req.query).length){
+      if(req.query.date_begin && req.query.date_end){
         const { date_begin, date_end } = req.query
         const dateBeginParse = format(parse(String(date_begin), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
         const dateEndParse = format(parse(String(date_end), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
-
+        
         const searchRangeDate = await transactionsRepository
           .query(`SELECT * FROM transactions WHERE due_date BETWEEN '${dateBeginParse}' AND '${dateEndParse}' ORDER BY due_date`)
-
 
         return resp.status(200).json(searchRangeDate)
       }
 
-  
+      if(req.query.range){
+        const allow_range = [7, 15, 30, 60, 90]
+        const range = Number(req.query.range)
+        const date_today = format(new Date(), "yyyy/MM/dd")
+        const date_old = format(subDays(new Date(), Number(range)), "yyyy/MM/dd")
+
+        if(!allow_range.includes(range)){
+          return resp.status(422).json({ message: "invalid range" })
+        }
+
+        const searchRangeDate = await transactionsRepository
+          .query(`SELECT * FROM transactions WHERE due_date BETWEEN '${date_old}' AND '${date_today}' ORDER BY due_date`)
+
+          return resp.status(200).json(searchRangeDate)
+      }
+
       if (!searchTransaction) {
         return resp.status(404).json({ message: 'transaction not found' })
       }
