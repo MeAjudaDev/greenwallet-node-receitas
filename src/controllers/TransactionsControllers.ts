@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
-import { parse, format, subDays, formatDistance } from 'date-fns'
+import { parse, format } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { convertDateToDB, newDateFormated, subtractDaysDateCurrent } from '../helpers/dates'
+import { convertDateToDB, newDateFormated, subtractDaysDateCurrent } from '../helpers/datesHelpers'
 import TransactionsRepository from '../repositories/TransactionsRepository'
 
 export default new class TransactionsController {
