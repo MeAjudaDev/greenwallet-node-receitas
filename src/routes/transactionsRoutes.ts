@@ -11,6 +11,13 @@ transactionsRoutes
   )
 
 transactionsRoutes
+  .get('/user/:user_id/transaction/:transaction_id',
+    validate.showTransaction(),
+    validate.verifyErrosTransaction,
+    TransactionsControllers.show
+  )
+
+transactionsRoutes
 .get('/user/:user_id',
   validate.indexTransaction(),
   validate.verifyErrosTransaction,
