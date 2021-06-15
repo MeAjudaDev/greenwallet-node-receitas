@@ -8,30 +8,15 @@ export default new class TransactionsController {
   async index (req: Request, resp: Response) {
     try {
       const { user_id } = req.params
-      const data = await getCustomRepository(TransactionsRepository).find({
-        where: { user_id }
-      })
-
-      return resp.status(200).json(data)
-    } catch (error) {
-      console.error(error)
-      return resp.status(500).json({ message: error })
-    }
-  }
-
-  async show (req: Request, resp: Response) {
-    try {
-      const { user_id, transaction_id } = req.params
       const transactionsRepository = getCustomRepository(TransactionsRepository)
-      const searchTransaction = await transactionsRepository.findOne({ user_id, id: transaction_id })
 
       if(req.query.date_begin && req.query.date_end){
         const { date_begin, date_end } = req.query
         const dateBeginParse = format(parse(String(date_begin), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
         const dateEndParse = format(parse(String(date_end), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
-        
+
         const searchRangeDate = await transactionsRepository
-          .query(`SELECT * FROM transactions WHERE due_date BETWEEN '${dateBeginParse}' AND '${dateEndParse}' ORDER BY due_date`)
+          .query(`SELECT * FROM transactions WHERE user_id = ${user_id} AND due_date BETWEEN '${dateBeginParse}' AND '${dateEndParse}' ORDER BY due_date`)
 
         return resp.status(200).json(searchRangeDate)
       }
@@ -47,10 +32,27 @@ export default new class TransactionsController {
         }
 
         const searchRangeDate = await transactionsRepository
-          .query(`SELECT * FROM transactions WHERE due_date BETWEEN '${date_old}' AND '${date_today}' ORDER BY due_date`)
+          .query(`SELECT * FROM transactions WHERE user_id = ${user_id} AND due_date BETWEEN '${date_old}' AND '${date_today}' ORDER BY due_date`)
 
           return resp.status(200).json(searchRangeDate)
       }
+
+      const data = await transactionsRepository.find({
+        where: { user_id }
+      })
+
+      return resp.status(200).json(data)
+    } catch (error) {
+      console.error(error)
+      return resp.status(500).json({ message: error })
+    }
+  }
+
+  async show (req: Request, resp: Response) {
+    try {
+      const { user_id, transaction_id } = req.params
+      const transactionsRepository = getCustomRepository(TransactionsRepository)
+      const searchTransaction = await transactionsRepository.findOne({ user_id, id: transaction_id })
 
       if (!searchTransaction) {
         return resp.status(404).json({ message: 'transaction not found' })
