@@ -3,7 +3,7 @@ import { parse, format } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { parseAsync } from 'json2csv'
-import { generatePDF } from '../utils/utils'
+import { generatePDF } from '../utils/pdf'
 import { convertDateToDB, newDateFormated, subtractDaysDateCurrent } from '../helpers/datesHelpers'
 import TransactionsRepository from '../repositories/TransactionsRepository'
 
