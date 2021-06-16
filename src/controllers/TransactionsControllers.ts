@@ -2,7 +2,7 @@
 import { parse, format } from 'date-fns'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { parseAsync } from 'json2csv'
+import { generateCSV } from '../utils/csv'
 import { generatePDF } from '../utils/pdf'
 import { convertDateToDB, newDateFormated, subtractDaysDateCurrent } from '../helpers/datesHelpers'
 import TransactionsRepository from '../repositories/TransactionsRepository'
@@ -160,12 +160,8 @@ export default new class TransactionsController {
     try {
       const { user_id, start_date, end_date, type } = req.query
 
-      const formatDateToDBFormat = (date: any) =>{
-        return format(parse(String(date), "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
-      }
-
-      const parsedStartDate = formatDateToDBFormat(start_date)
-      const parsedEndDate = formatDateToDBFormat(end_date)
+      const parsedStartDate = convertDateToDB(String(start_date))
+      const parsedEndDate = convertDateToDB(String(end_date))
 
       const transactionsRepository = getCustomRepository(TransactionsRepository)
 
@@ -176,13 +172,7 @@ export default new class TransactionsController {
 
       switch(type){
         case "csv":
-          //fields that goes into the csv
-          const fields: any = ['description', 'value', 'is_fixed', 'due_date']
-          const opts = {fields}
-
-          //use parseAsync, so that it doesn't stops nodejs event loop
-          const csv = await parseAsync(transactionsData, opts)
-
+          const csv = await generateCSV(transactionsData)
           res.attachment(String(Date.now()) + '.csv')
           return res.status(200).send(csv)
         case "pdf":
@@ -190,7 +180,7 @@ export default new class TransactionsController {
           const doc = await generatePDF(transactionsData)
           doc.pipe(res)
           doc.end()
-          break
+          return res.status(200)
         default:
           break
       }
