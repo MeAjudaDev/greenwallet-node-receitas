@@ -1,7 +1,11 @@
-import { parse, format, subDays, formatDistance } from 'date-fns'
+import { parse, format, subDays } from 'date-fns'
 
-const convertDateToDB = (date: string) =>  {
+const convertDateToDB = (date: string) => {
     return format(parse(date, "dd/MM/yyyy", new Date()), "yyyy/MM/dd")
+}
+
+const convertDBDateToNormal = (date: string) => {
+    return new Date(date).toLocaleDateString('pt-BR')
 }
 
 const newDateFormated = () => {
@@ -15,5 +19,6 @@ const subtractDaysDateCurrent = (days: number) => {
 export {
     convertDateToDB,
     newDateFormated,
-    subtractDaysDateCurrent
+    subtractDaysDateCurrent,
+    convertDBDateToNormal
 }
