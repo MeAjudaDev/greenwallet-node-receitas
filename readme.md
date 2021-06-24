@@ -17,24 +17,29 @@ npm start
 npm dev
 ```
 
-## Endpoints
+## Documentação completa
+https://documenter.getpostman.com/view/14040132/TzedfPGb
+
+
+## Alguns Endpoints
 
 ### Categorias
 
 #### Cadastrar nova categoria
-> POST - /categories/:user_id
+> POST - /categories
 
 Request
   ```json
   {
-    "name": "Teste1",
-    "state": "A",
-    "type": "R"
+    "user_id": 1,
+    "name": "Money",
+    "type": "R",
+    "state": "A"
   }
 ```
 
 #### Listar categorias
-> GET - /categories
+> GET - /categories/user/:user_id
 
 Response
 ```json
@@ -56,7 +61,7 @@ Response
 ```
 
 Listar categoria especifica
-> GET categories/:categorie_id
+> GET categories/user/:user_id/category/:category_id
 ```json
 {
   "message": "success",
@@ -75,30 +80,25 @@ Listar categoria especifica
 ```
 
 #### Atualizar categoria
-> PUT - /categories/:user_id/categorie_id
+> PUT - /categories/user/:user_id/category/:category_id
 
 Request
 ```json
 {
 	"name": "Categoria1 não usada",
-	"state": "W",
-	"type": "RZ"
+	"state": "R",
+	"type": "A"
 }
 ```
 
 #### Deletar categoria
-> PUT - /categories/:user_id
+> PUT - /categories/user/:user_id/category/:category_id
 
 ## Receitas
 
 #### Listar receitas
 Listar todas as receitas
-> GET - /receipts/
-
-Query Params
-```
-user_id: 1
-```
+> GET - /transactions/:user_id
 
 Response
 ```json
@@ -106,15 +106,15 @@ Response
   "message": "Success",
   "body": [
     {
-      "id": 2,
-      "description": "Internet",
-      "value": "99.90",
-      "is_fixed": 1,
-      "due_date": "2021-04-08T03:00:00.000Z",
-      "update_at": null,
-      "created_at": "2021-05-06T22:44:32.000Z",
-      "user_id": 1,
-      "category_id": 1
+      "id": 198,
+      "user_id": "10",
+      "category_id": 75,
+      "description": "Whatsapp 2",
+      "value": "10.00",
+      "is_fixed": true,
+      "due_date": "2021-06-24T03:00:00.000Z",
+      "type": "R",
+      "state": "A"
     },
     {
       "id": 3,
@@ -132,71 +132,82 @@ Response
 ```
 
 Listar uma receita especifica
-> GET - /receipts//:receita_id
-
-Query Params
-```
-user_id: 1
-```
+> GET - /receipts/user/:user_id/transaction/:receita_id
 
 Response
 ```json
 {
-  "message": "Success",
-  "body": {
-    "id": 2,
-    "description": "Internet",
-    "value": "99.90",
-    "is_fixed": 1,
-    "due_date": "2021-04-08T03:00:00.000Z",
-    "update_at": null,
-    "created_at": "2021-05-06T22:44:32.000Z",
-    "user_id": 1,
-    "category_id": 1
-  }
+  "message": "success",
+  "body": [
+      {
+          "id": 198,
+          "user_id": "10",
+          "category_id": 75,
+          "description": "Whatsapp 2",
+          "value": "10.00",
+          "is_fixed": true,
+          "due_date": "2021-06-24T03:00:00.000Z",
+          "type": "R",
+          "state": "A"
+      }
+  ]
 }
 ```
 
 #### Criar receita
-> POST - /receipts/create
+> POST - /transactions
 Request
 ```json
 {
-    "description": "LUZ",
-    "value": 800.90,
+    "user_id": "10",
+    "category_id": "75",
+    "description": "Whatsapp 2",
+    "value": 10,
     "is_fixed": true,
-    "due_date": "2021-04-08",
-    "category_id": 1,
-    "user_id": 1
+    "due_date": "24/06/2021",
+    "state": "A",
+    "type": "R"
 }
 ```
 
 Response
 ```json
 {
-  "message": "Success"
+  "message": "success",
+  "body": [
+      {
+          "user_id": "10",
+          "category_id": "75",
+          "description": "Whatsapp 2",
+          "value": 10,
+          "is_fixed": true,
+          "due_date": "2021-06-24T03:00:00.000Z",
+          "state": "A",
+          "type": "R",
+          "id": 199
+      }
+  ]
 }
 ```
 
 #### Atualizar receita
-> PUT - /receipts/edit
+> PUT - transactions/user/:user_id/transaction/:transaction_id
 
 Request
 ```json
 {
-	// opcional
-	"description": "Jailson Mendes",
-	"is_fixed": 1,
-	"value": 13.37,
-
-	//obrigatorios
-	"id": 1,
-	"user_id": 1,
-	"category_id": 1
+  "user_id": "10",
+  "category_id": "74",
+  "description": "Jailson Mendes",
+  "value": 10,
+  "is_fixed": true,
+  "due_date": "28/03/2021",
+  "state": "A",
+  "type": "R"
 }
 ```
 
 ### Profile
 
 #### Deletar profile
-> DELETE - /receipts/delete/1
+> DELETE - /transactions/user/:user_id/transaction/:transaction_id
