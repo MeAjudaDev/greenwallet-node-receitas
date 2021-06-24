@@ -1,3 +1,5 @@
 node_modules
 
+ormconfig.json
+ormconfig-tests.json
 .env
