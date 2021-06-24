@@ -10,16 +10,10 @@ npm i
 
 ## Rodando o projeto
 ```shell
-npm start
-```
->dev
-```shell
-npm dev
+npm run dev
 ```
 
-## Documentação completa
-https://documenter.getpostman.com/view/14040132/TzedfPGb
-
+ > [Documentação Completa](https://documenter.getpostman.com/view/14040132/TzedfPGb)
 
 ## Alguns Endpoints
 
