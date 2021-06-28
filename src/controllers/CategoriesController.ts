@@ -66,13 +66,13 @@ export default new class CategoryController {
 
   async update (req: Request, res: Response) {
     try {
-      if (!req.params.idUser || !req.params.idCategory) {
+      if (!req.params.userid || !req.params.idCategory) {
         return res.status(422).json({ message: 'Invalid params' })
       }
 
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const categoryUpdated: any = await categoriesRepository.updateCategory({
-        idUser: req.params.idUser,
+        userid: req.params.userid,
         idCategory: req.params.idCategory,
         name: req.body.name,
         state: req.body.state,
@@ -91,7 +91,7 @@ export default new class CategoryController {
 
   async delete (req: Request, res: Response) {
     try {
-      if (!req.params.idUser || !req.params.idCategory) {
+      if (!req.params.userid || !req.params.idCategory) {
         return res.status(422).json({ message: 'Invalid params' })
       }
       const categoriesRepository = getCustomRepository(CategoriesRepository)
