@@ -72,7 +72,7 @@ export default new class CategoryController {
 
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const categoryUpdated: any = await categoriesRepository.updateCategory({
-        userid: req.params.userid,
+        userid: req.params.user_id,
         idCategory: req.params.idCategory,
         name: req.body.name,
         state: req.body.state,
