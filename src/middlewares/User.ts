@@ -5,14 +5,14 @@ import { RequestHandler } from 'express'
 export const userExists:RequestHandler = async(req, res, next) =>{
   try{
     let userid
-    if(req.params.userid){
-      userid = req.params.userid
+    if(req.params.user_id){
+      userid = req.params.user_id
     }else if(req.body.user_id){
       userid = req.body.user_id
     }else if(req.query.user_id){
       userid = req.query.user_id
     }
-    
+
     const userRepo = getCustomRepository(UserRepository)
     const user = await userRepo.findById(Number(userid))
     if(!user) {

@@ -5,14 +5,14 @@ import CategoriesRepository from '../repositories/CategoriesRepository'
 export default new class CategoryController {
   async index (req: Request, res: Response) {
     try {
-      const { userid } = req.params
+      const { user_id } = req.params
       const categoriesRepository = getCustomRepository(CategoriesRepository)
       const responseBody: any = {
         message: '',
         body: []
       }
 
-      const category = await categoriesRepository.findAll({ userid })
+      const category = await categoriesRepository.findAll({ user_id })
       responseBody.message = 'Success'
       responseBody.body = category
       if (category.length < 1) {
@@ -28,14 +28,14 @@ export default new class CategoryController {
 
   async show (req: Request, res: Response) {
     try {
-      const { userid, idCategory } = req.params
+      const { user_id, idCategory } = req.params
       const responseBody: any = {
         message: '',
         body: []
       }
 
       const categoriesRepository = getCustomRepository(CategoriesRepository)
-      const category = await categoriesRepository.findByIdAndUserId({ userid, idCategory })
+      const category = await categoriesRepository.findByIdAndUserId({ user_id, idCategory })
 
       responseBody.message = 'Success'
       responseBody.body.push(category)
@@ -66,7 +66,7 @@ export default new class CategoryController {
 
   async update (req: Request, res: Response) {
     try {
-      if (!req.params.userid || !req.params.idCategory) {
+      if (!req.params.user_id || !req.params.idCategory) {
         return res.status(422).json({ message: 'Invalid params' })
       }
 
@@ -91,7 +91,7 @@ export default new class CategoryController {
 
   async delete (req: Request, res: Response) {
     try {
-      if (!req.params.userid || !req.params.idCategory) {
+      if (!req.params.user_id || !req.params.idCategory) {
         return res.status(422).json({ message: 'Invalid params' })
       }
       const categoriesRepository = getCustomRepository(CategoriesRepository)
