@@ -41,8 +41,13 @@ export default new class TransactionsController {
       }
 
       const active = "A";
+      const recipes = "R";
       const data = await transactionsRepository.find({
-        where: { user_id, state: active }
+        where: { 
+          user_id, 
+          state: active,
+          type: recipes 
+        }
       })
 
       return resp.status(200).json(data)
