@@ -40,8 +40,9 @@ export default new class TransactionsController {
           return resp.status(200).json(searchRangeDate)
       }
 
+      const active = "A";
       const data = await transactionsRepository.find({
-        where: { user_id }
+        where: { user_id, state: active }
       })
 
       return resp.status(200).json(data)
