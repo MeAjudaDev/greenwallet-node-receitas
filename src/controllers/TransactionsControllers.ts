@@ -12,6 +12,8 @@ export default new class TransactionsController {
     try {
       const { user_id } = req.params
       const transactionsRepository = getCustomRepository(TransactionsRepository)
+      const active = "A";
+      const recipes = "R";
 
       if(req.query.date_begin && req.query.date_end){
         const { date_begin, date_end } = req.query
@@ -40,8 +42,31 @@ export default new class TransactionsController {
           return resp.status(200).json(searchRangeDate)
       }
 
+      if(req.query.state){
+        const allow_state = ["A", "D", "E"]
+        const state = String(req.query.state).toUpperCase()
+
+        if(!allow_state.includes(state)){
+          return resp.status(422).json({ message: "invalid state" })
+        }
+
+        const data = await transactionsRepository.find({
+          where: {
+            user_id,
+            state,
+            type: recipes
+          }
+        })
+
+        return resp.status(200).json(data)
+      }
+
       const data = await transactionsRepository.find({
-        where: { user_id }
+        where: { 
+          user_id, 
+          state: active,
+          type: recipes 
+        }
       })
 
       return resp.status(200).json(data)
