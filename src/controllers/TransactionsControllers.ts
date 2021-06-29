@@ -147,7 +147,10 @@ export default new class TransactionsController {
         return resp.status(404).json({ message: 'transaction not found' })
       }
 
-      await transactionsRepository.delete({ user_id, id: transaction_id })
+      const deleted_state = "E";
+      await transactionsRepository.update({ user_id, id: transaction_id }, {
+        state: deleted_state
+      })
 
       return resp.status(200).json({ message: 'success' })
     } catch (error) {
