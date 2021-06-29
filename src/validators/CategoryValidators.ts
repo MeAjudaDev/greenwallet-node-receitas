@@ -5,13 +5,13 @@ const typesAllowed = ['E', 'R']
 
 export const indexRules = () => {
   return [
-    param('userid').exists().isNumeric()
+    param('user_id').exists().isNumeric()
   ]
 }
 
 export const showRules = () => {
   return [
-    param('userid').exists().isNumeric(),
+    param('user_id').exists().isNumeric(),
     param('idCategory').exists().isNumeric()
   ]
 }
@@ -27,7 +27,7 @@ export const createRules = () => {
 
 export const updateRules = () => {
   return [
-    param('idUser').exists().isNumeric(),
+    param('user_id').exists().isNumeric(),
     param('idCategory').exists().isNumeric(),
     body('name').exists().isLength({ max: 100 }),
     body('type').exists().isIn(typesAllowed),
@@ -37,7 +37,7 @@ export const updateRules = () => {
 
 export const deleteRules = () => {
   return [
-    param('idUser').exists().isNumeric(),
+    param('user_id').exists().isNumeric(),
     param('idCategory').exists().isNumeric()
   ]
 }

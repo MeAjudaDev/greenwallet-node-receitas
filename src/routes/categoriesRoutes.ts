@@ -7,14 +7,15 @@ import {
   indexRules,
   validate
 } from '../validators/CategoryValidators'
+import { userExists } from '../middlewares/User'
 import CategoriesController from '../controllers/CategoriesController'
 
 const categoriesRoutes = Router()
 
-categoriesRoutes.get('/user/:userid', indexRules(), validate, CategoriesController.index)
-categoriesRoutes.get('/user/:userid/category/:idCategory', showRules(), validate, CategoriesController.show)
-categoriesRoutes.post('/', createRules(), validate, CategoriesController.create)
-categoriesRoutes.put('/user/:idUser/category/:idCategory', updateRules(), validate, CategoriesController.update)
-categoriesRoutes.delete('/user/:idUser/category/:idCategory', deleteRules(), validate, CategoriesController.delete)
+categoriesRoutes.get('/user/:user_id', indexRules(), validate, userExists, CategoriesController.index)
+categoriesRoutes.get('/user/:user_id/category/:idCategory', showRules(), validate, userExists, CategoriesController.show)
+categoriesRoutes.post('/', createRules(), validate, userExists, CategoriesController.create)
+categoriesRoutes.put('/user/:user_id/category/:idCategory', updateRules(), validate, userExists, CategoriesController.update)
+categoriesRoutes.delete('/user/:user_id/category/:idCategory', deleteRules(), validate, userExists, CategoriesController.delete)
 
 export default categoriesRoutes
